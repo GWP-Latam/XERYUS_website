@@ -145,7 +145,7 @@ export default function Hero({ onNavigate, videoUrl = DEFAULT_VIDEO_URL }: HeroP
             <div className="flex items-center gap-3 animate-fade-in-up">
               <div className="red-line" />
               <span className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Inteligencia de Mercados · Investigación Estratégica
+                Inteligencia y Análisis de Mercados 
               </span>
             </div>
 
