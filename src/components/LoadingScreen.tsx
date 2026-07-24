@@ -1,19 +1,46 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface LoadingScreenProps {
   onFinish: () => void;
 }
 
 const FADE_DURATION_MS = 700;
+const MAX_LOAD_MS = 8000;
 
 export default function LoadingScreen({ onFinish }: LoadingScreenProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const finishedRef = useRef(false);
   const [fading, setFading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleEnded = () => {
+  const finish = () => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
     setFading(true);
     setTimeout(onFinish, FADE_DURATION_MS);
   };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const tryPlay = async () => {
+      try {
+        await video.play();
+      } catch {
+        video.muted = true;
+        try {
+          await video.play();
+        } catch {
+          finish();
+        }
+      }
+    };
+    tryPlay();
+
+    const fallback = setTimeout(finish, MAX_LOAD_MS);
+    return () => clearTimeout(fallback);
+  }, []);
 
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
@@ -26,11 +53,12 @@ export default function LoadingScreen({ onFinish }: LoadingScreenProps) {
       className={`fixed inset-0 z-[100] flex items-center justify-center bg-black transition-opacity duration-700 ease-out ${fading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
     >
       <video
+        ref={videoRef}
         src="/assets/videos/xeryus-logo-intro.mp4"
         className="w-full max-w-2xl px-8 pb-20"
-        autoPlay
         playsInline
-        onEnded={handleEnded}
+        onEnded={finish}
+        onError={finish}
         onTimeUpdate={handleTimeUpdate}
       />
 
