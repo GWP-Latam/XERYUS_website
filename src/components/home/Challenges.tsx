@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useInView } from '@/hooks/useAnimation';
 import {
@@ -18,43 +19,13 @@ const challenges = [
   { icon: Building2, title: 'Seleccionar la mejor ubicación', desc: 'Geomarketing y análisis territorial para decisiones inmobiliarias.' },
 ];
 
-function ChallengeCard({ challenge, index, isDark }: { challenge: typeof challenges[0]; index: number; isDark: boolean }) {
-  const { ref, inView } = useInView(0.1);
-
-  return (
-    <div
-      ref={ref}
-      className={`group p-8 border transition-all duration-500 cursor-pointer
-        ${inView ? 'animate-fade-in-up' : 'opacity-0'}
-        ${isDark
-          ? 'bg-gray-950 border-white/5 hover:border-[#fd3838]/30 hover:bg-gray-900'
-          : 'bg-white border-black/5 hover:border-[#fd3838]/30 hover:shadow-xl'
-        }`}
-      style={{ animationDelay: `${(index % 3) * 0.1}s` }}
-    >
-      <div className="flex items-start justify-between mb-6">
-        <div className={`w-12 h-12 flex items-center justify-center transition-colors duration-300
-          ${isDark ? 'bg-white/5 group-hover:bg-[#fd3838]/10' : 'bg-gray-50 group-hover:bg-[#fd3838]/5'}`}>
-          <challenge.icon size={20} className={`transition-colors duration-300
-            ${isDark ? 'text-gray-400 group-hover:text-[#fd3838]' : 'text-gray-500 group-hover:text-[#fd3838]'}`} />
-        </div>
-        <ArrowRight size={16} className={`opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1
-          ${isDark ? 'text-[#fd3838]' : 'text-[#fd3838]'}`} />
-      </div>
-
-      <h3 className={`text-lg font-semibold mb-3 transition-colors duration-300
-        ${isDark ? 'text-white group-hover:text-[#fd3838]' : 'text-black group-hover:text-[#fd3838]'}`}>
-        {challenge.title}
-      </h3>
-      <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-        {challenge.desc}
-      </p>
-    </div>
-  );
-}
+const ITEM_HEIGHT = 60;
 
 export default function Challenges() {
   const { isDark } = useTheme();
+  const { ref, inView } = useInView(0.1);
+  const [active, setActive] = useState(0);
+  const activeChallenge = challenges[active];
 
   return (
     <section className={`py-24 transition-colors duration-300 ${isDark ? 'bg-black' : 'bg-white'}`}>
@@ -66,15 +37,64 @@ export default function Challenges() {
             No vendemos metodologías.<br />
             <span className="text-[#fd3838]">Resolvemos problemas empresariales.</span>
           </h2>
-          <p className={`mt-6 text-lg max-w-2xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Cada tarjeta representa una necesidad real de negocio. Selecciona el reto que más te preocupa y descubre cómo podemos ayudarte.
-          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {challenges.map((c, i) => (
-            <ChallengeCard key={i} challenge={c} index={i} isDark={isDark} />
-          ))}
+        <div
+          ref={ref}
+          className={`grid lg:grid-cols-12 border transition-all duration-500
+            ${isDark ? 'border-white/5' : 'border-black/5'}
+            ${inView ? 'animate-fade-in-up' : 'opacity-0'}`}
+        >
+          {/* Line sidebar */}
+          <div className={`lg:col-span-5 relative border-b lg:border-b-0 lg:border-r ${isDark ? 'border-white/5' : 'border-black/5'}`}>
+            <div
+              className="hidden lg:block absolute left-0 w-0.5 bg-[#fd3838] transition-transform duration-500 ease-out"
+              style={{ height: ITEM_HEIGHT, transform: `translateY(${active * ITEM_HEIGHT}px)` }}
+            />
+            {challenges.map((c, i) => (
+              <button
+                key={i}
+                onMouseEnter={() => setActive(i)}
+                onClick={() => setActive(i)}
+                style={{ height: ITEM_HEIGHT }}
+                className={`w-full flex items-center gap-4 px-6 text-left border-b last:border-b-0 transition-colors duration-300
+                  ${isDark ? 'border-white/5' : 'border-black/5'}
+                  ${active === i ? (isDark ? 'bg-white/5' : 'bg-gray-50') : ''}`}
+              >
+                <c.icon
+                  size={18}
+                  className={`flex-shrink-0 transition-colors duration-300
+                    ${active === i ? 'text-[#fd3838]' : isDark ? 'text-gray-600' : 'text-gray-400'}`}
+                />
+                <span
+                  className={`text-sm font-medium transition-colors duration-300
+                    ${active === i ? (isDark ? 'text-white' : 'text-black') : isDark ? 'text-gray-500' : 'text-gray-500'}`}
+                >
+                  {c.title}
+                </span>
+                <ArrowRight
+                  size={14}
+                  className={`ml-auto flex-shrink-0 text-[#fd3838] transition-all duration-300
+                    ${active === i ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Detail panel */}
+          <div className={`lg:col-span-7 relative overflow-hidden min-h-[280px] flex items-center ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+            <div key={active} className="w-full p-8 lg:p-14 animate-fade-in">
+              <div className={`w-16 h-16 flex items-center justify-center mb-8 ${isDark ? 'bg-[#fd3838]/10' : 'bg-[#fd3838]/5'}`}>
+                <activeChallenge.icon size={28} className="text-[#fd3838]" />
+              </div>
+              <h3 className={`text-2xl lg:text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
+                {activeChallenge.title}
+              </h3>
+              <p className={`text-base lg:text-lg leading-relaxed max-w-md ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                {activeChallenge.desc}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

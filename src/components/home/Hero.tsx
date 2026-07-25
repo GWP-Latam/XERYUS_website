@@ -1,61 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
-  videoUrl?: string;
 }
 
-const DEFAULT_VIDEO_URL = 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1784932073/Xeryus_InstAnim_VF_1_s3n9vx.mp4';
-const POSTER_URL = '/assets/videos/portada-video.jpeg';
-
-export default function Hero({ onNavigate, videoUrl = DEFAULT_VIDEO_URL }: HeroProps) {
+export default function Hero({ onNavigate }: HeroProps) {
   const { isDark } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
-
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      video.play();
-      setIsPlaying(true);
-    } else {
-      video.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
-  };
-
-  const toggleFullscreen = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.requestFullscreen) video.requestFullscreen();
-  };
-
-  const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    if (!video || !video.duration) return;
-    setProgress((video.currentTime / video.duration) * 100);
-  };
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    const video = videoRef.current;
-    if (!video || !video.duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
-    video.currentTime = ratio * video.duration;
-  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -138,121 +91,39 @@ export default function Hero({ onNavigate, videoUrl = DEFAULT_VIDEO_URL }: HeroP
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* Left - Text */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="flex items-center gap-3 animate-fade-in-up">
-              <div className="red-line" />
-              <span className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                Inteligencia y Análisis de Mercados 
-              </span>
-            </div>
+      <div className="relative max-w-4xl mx-auto px-6 lg:px-8 w-full text-center">
+        <div className="flex items-center gap-3 justify-center animate-fade-in-up">
+          <div className="red-line" />
+          <span className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+            Inteligencia y Análisis de Mercados
+          </span>
+          <div className="red-line" />
+        </div>
 
-            <h1 className={`section-title text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-[1.1] animate-fade-in-up delay-100 ${isDark ? 'text-white' : 'text-black'}`}>
-              Hay millones en juego.{' '}
-              <span className="text-[#fd3838]">No es momento de adivinar.</span>
-            </h1>
+        <h1 className={`section-title text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.1] mt-8 animate-fade-in-up delay-100 ${isDark ? 'text-white' : 'text-black'}`}>
+          Hay millones en juego.{' '}
+          <span className="text-[#fd3838]">No es momento de adivinar.</span>
+        </h1>
 
-            <p className={`text-lg md:text-xl leading-relaxed max-w-xl animate-fade-in-up delay-200 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              Más de 30 años ayudando a líderes de industria a encontrar su próxima gran oportunidad.
-            </p>
+        <p className={`text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mt-8 animate-fade-in-up delay-200 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          Más de 30 años ayudando a líderes de industria a encontrar su próxima gran oportunidad.
+        </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-300">
-              <button
-                onClick={() => onNavigate('contacto')}
-                className="group flex items-center justify-center gap-2 bg-[#fd3838] text-white px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] hover:shadow-xl hover:shadow-red-900/20 active:scale-95"
-              >
-                Solicitar asesoría
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={() => onNavigate('casos')}
-                className={`flex items-center justify-center gap-2 border px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 active:scale-95
-                  ${isDark ? 'border-white/20 text-white hover:bg-white hover:text-black' : 'border-black/20 text-black hover:bg-black hover:text-white'}`}
-              >
-                Ver casos de éxito
-              </button>
-            </div>
-          </div>
-
-          {/* Right - Video */}
-          <div className="lg:col-span-5 animate-slide-in-right delay-300">
-            <div className="relative group">
-              <div className={`relative aspect-video overflow-hidden ${isDark ? 'bg-black' : 'bg-gray-900'}`}>
-                {videoUrl ? (
-                  <>
-                    <video
-                      ref={videoRef}
-                      src={videoUrl}
-                      poster={POSTER_URL}
-                      className="w-full h-full object-cover"
-                      onTimeUpdate={handleTimeUpdate}
-                      onEnded={() => setIsPlaying(false)}
-                      onClick={togglePlay}
-                      controlsList="nodownload noremoteplayback"
-                      disablePictureInPicture
-                      onContextMenu={e => e.preventDefault()}
-                      muted={isMuted}
-                      playsInline
-                    />
-
-                    {/* Center play button with glass effect */}
-                    {!isPlaying && (
-                      <button
-                        onClick={togglePlay}
-                        aria-label="Reproducir video"
-                        className="absolute inset-0 flex items-center justify-center"
-                      >
-                        <span className="absolute w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_0_40px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:scale-110" />
-                        <Play size={26} className="relative text-white fill-white ml-1 drop-shadow" />
-                      </button>
-                    )}
-
-                    {/* Custom controls bar */}
-                    <div
-                      className={`absolute bottom-0 left-0 right-0 px-4 pb-3 pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
-                    >
-                      <div
-                        onClick={handleSeek}
-                        className="h-1 w-full rounded-full bg-white/20 cursor-pointer mb-3"
-                      >
-                        <div
-                          className="h-full rounded-full bg-[#fd3838] transition-[width] duration-150"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <button onClick={togglePlay} aria-label={isPlaying ? 'Pausar' : 'Reproducir'} className="text-white/90 hover:text-white transition-colors">
-                            {isPlaying ? <Pause size={16} className="fill-white" /> : <Play size={16} className="fill-white ml-0.5" />}
-                          </button>
-                          <button onClick={toggleMute} aria-label={isMuted ? 'Activar sonido' : 'Silenciar'} className="text-white/90 hover:text-white transition-colors">
-                            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                          </button>
-                        </div>
-                        <button onClick={toggleFullscreen} aria-label="Pantalla completa" className="text-white/90 hover:text-white transition-colors">
-                          <Maximize size={15} />
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
-                    <div className="absolute inset-0 noise opacity-30" />
-
-                    <div className="relative z-10 text-center px-8">
-                      <div className="w-20 h-20 mx-auto mb-6 border-2 border-white/20 rounded-full flex items-center justify-center group-hover:border-[#fd3838] transition-colors duration-300">
-                        <Play size={28} className="text-white/60 group-hover:text-[#fd3838] transition-colors duration-300 ml-1" />
-                      </div>
-                      <p className="text-white/40 text-sm tracking-wider uppercase">Espacio para tu video institucional</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up delay-300">
+          <button
+            onClick={() => onNavigate('contacto')}
+            className="group flex items-center justify-center gap-2 bg-[#fd3838] text-white px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] hover:shadow-xl hover:shadow-red-900/20 active:scale-95"
+          >
+            Solicitar asesoría
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          <button
+            onClick={() => onNavigate('casos')}
+            className={`flex items-center justify-center gap-2 border px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 active:scale-95
+              ${isDark ? 'border-white/20 text-white hover:bg-white hover:text-black' : 'border-black/20 text-black hover:bg-black hover:text-white'}`}
+          >
+            Ver casos de éxito
+          </button>
         </div>
       </div>
 

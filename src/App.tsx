@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Hero from '@/components/home/Hero';
 import TrustBar from '@/components/home/TrustBar';
-import ClientsCarousel from '@/components/home/ClientsCarousel';
+import InstitutionalShowcase from '@/components/home/InstitutionalShowcase';
 import Challenges from '@/components/home/Challenges';
 import Differentiators from '@/components/home/Differentiators';
 import HowWeWork from '@/components/home/HowWeWork';
@@ -60,7 +60,7 @@ function App() {
         <>
           <Hero onNavigate={handleNavigate} />
           <TrustBar />
-          <ClientsCarousel />
+          <InstitutionalShowcase />
           <Challenges />
           <Differentiators />
           <HowWeWork />
