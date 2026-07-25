@@ -19,11 +19,11 @@ function MarqueeRow({ items, isDark, reverse }: { items: string[]; isDark: boole
 
   return (
     <div className="relative overflow-hidden">
-      <div className={`flex gap-8 whitespace-nowrap ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
+      <div className={`flex gap-6 whitespace-nowrap ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
         {doubled.map((client, i) => (
           <div
             key={i}
-            className={`px-6 py-4 border text-sm font-bold tracking-wider transition-colors duration-300
+            className={`px-8 py-6 border text-2xl md:text-3xl font-bold tracking-wider transition-colors duration-300
               ${isDark
                 ? 'border-white/10 text-gray-500 hover:text-white hover:border-[#fd3838]/40'
                 : 'border-black/10 text-gray-400 hover:text-black hover:border-[#fd3838]/40'
@@ -93,12 +93,12 @@ export default function InstitutionalShowcase() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Institutional video, near half the screen */}
           <div className="group relative">
-            <div className="relative aspect-[4/5] md:aspect-video lg:aspect-[4/5] overflow-hidden">
+            <div className={`relative aspect-video overflow-hidden ${isDark ? 'bg-black' : 'bg-gray-900'}`}>
               <video
                 ref={videoRef}
                 src={DEFAULT_VIDEO_URL}
                 poster={POSTER_URL}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setIsPlaying(false)}
                 onClick={togglePlay}
