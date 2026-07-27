@@ -171,12 +171,6 @@ export default function Soluciones({ onNavigate }: PageProps) {
             ))}
           </div>
 
-          <div key={`subtitle-${activeCat}`} className="text-center mb-10 animate-fade-in">
-            <p className={`text-sm tracking-wide ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-              {activeCategory.subtitle} · {activeCategory.tools.length} herramientas
-            </p>
-          </div>
-
           {/* Tool list */}
           <div key={`tools-${activeCat}`} className="grid md:grid-cols-2 gap-3 max-w-5xl mx-auto">
             {activeCategory.tools.map((tool, i) => (
@@ -198,13 +192,15 @@ export default function Soluciones({ onNavigate }: PageProps) {
             ))}
           </div>
 
-          {/* Closing emphasis */}
-          <div className="flex items-center gap-4 justify-center flex-wrap mt-16">
-            <div className="red-line" />
-            <p className={`text-sm md:text-base font-medium text-center ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-              Y estas son solo algunas de nuestras herramientas — combinamos las que tu reto necesita.
-            </p>
-            <div className="red-line" />
+          {/* CTA */}
+          <div className="text-center mt-16">
+            <button
+              onClick={() => onNavigate('contacto')}
+              className="group inline-flex items-center gap-2 bg-[#fd3838] text-white px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] hover:shadow-xl hover:shadow-red-900/20 active:scale-95"
+            >
+              Diseña tu combinación de herramientas
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
         </div>
       </section>
