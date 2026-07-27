@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useInView } from '@/hooks/useAnimation';
-import { TrendingUp, ShoppingBag, Users, Shield, Package, Crosshair, Eye, DollarSign, ArrowRight, Check } from 'lucide-react';
+import {
+  TrendingUp, ShoppingBag, Users, Shield, Package, Crosshair, Eye, DollarSign, ArrowRight,
+  BarChart3, ClipboardList, Hash, Route, RefreshCw, SplitSquareHorizontal, LineChart,
+  MessageSquare, Mic, Footprints, BookOpen, MousePointerClick,
+  Glasses, UserSearch, Telescope, PackageSearch,
+  Cpu, Radio, Map, Activity, Brain,
+  Target, Swords, FileSearch,
+} from 'lucide-react';
 
 interface PageProps {
   onNavigate: (page: string) => void;
@@ -17,14 +25,74 @@ const solutions = [
   { icon: DollarSign, title: 'Validar inversiones', desc: 'Reducir la incertidumbre antes de comprometer capital en un proyecto.', tag: 'Inversión' },
 ];
 
-const capabilities = [
-  'Investigación cuantitativa', 'Investigación cualitativa', 'Focus Groups', 'Entrevistas en profundidad',
-  'Geomarketing', 'Mystery Shopper', 'Social Listening', 'Modelos estadísticos', 'Inteligencia competitiva',
+const toolCategories = [
+  {
+    id: 'cuantitativos',
+    label: 'Métodos Cuantitativos',
+    subtitle: 'Medición y análisis estadístico',
+    icon: BarChart3,
+    tools: [
+      { icon: ClipboardList, name: 'Encuestas estructuradas', desc: 'Cuestionarios estandarizados con preguntas cerradas aplicados a una muestra para obtener datos estadísticamente representativos.' },
+      { icon: Hash, name: 'Conteos directos', desc: 'Registro numérico puntual de elementos, transacciones o acontecimientos en un espacio/tiempo determinado.' },
+      { icon: Route, name: 'Estudios de aforo (tráfico)', desc: 'Medición continua del volumen de personas o vehículos que transitan por un punto específico para calcular flujo y picos de demanda.' },
+      { icon: RefreshCw, name: 'Paneles de consumidores', desc: 'Seguimiento continuo a un grupo fijo de personas que registran sus compras y hábitos a lo largo del tiempo.' },
+      { icon: SplitSquareHorizontal, name: 'Experimentos cuantitativos (Pruebas A/B)', desc: 'Comparación de dos o más variables controladas para medir cuál genera mejor rendimiento estadístico.' },
+      { icon: LineChart, name: 'Modelos estadísticos y econométricos', desc: 'Análisis matemático de variables históricas para identificar correlaciones, patrones y proyecciones.' },
+    ],
+  },
+  {
+    id: 'cualitativos',
+    label: 'Métodos Cualitativos',
+    subtitle: 'Exploración y entendimiento profundo',
+    icon: MessageSquare,
+    tools: [
+      { icon: Mic, name: 'Entrevistas en profundidad', desc: 'Conversaciones individuales semiestructuradas para indagar en motivaciones, percepciones y experiencias del usuario.' },
+      { icon: Users, name: 'Grupos focales (Focus Groups)', desc: 'Discusiones guiadas con un grupo reducido de personas para evaluar reacciones, ideas o conceptos compartidos.' },
+      { icon: Footprints, name: 'Etnografía y observación participante', desc: 'Inmersión directa en el entorno natural del sujeto para analizar sus comportamientos reales sin interferir.' },
+      { icon: BookOpen, name: 'Diarios de usuario (Diary Studies)', desc: 'Registro auto-administrado (texto, fotos o video) donde el participante documenta sus rutinas durante un periodo determinado.' },
+      { icon: MousePointerClick, name: 'Pruebas de usabilidad (UX Testing)', desc: 'Evaluación directa de cómo un usuario interactúa con un producto o interfaz para identificar fricciones.' },
+    ],
+  },
+  {
+    id: 'observacionales',
+    label: 'Métodos Observacionales',
+    subtitle: 'Mystery shopper e in-situ',
+    icon: Glasses,
+    tools: [
+      { icon: UserSearch, name: 'Cliente incógnito (Mystery Shopper)', desc: 'Evaluación encubierta de la calidad del servicio, cumplimiento de procesos y atención al cliente en un punto de venta.' },
+      { icon: Telescope, name: 'Observación no participante', desc: 'Auditoría visual pasiva del comportamiento de las personas en un espacio sin interactuar con ellas.' },
+      { icon: PackageSearch, name: 'Auditoría de anaquel / Retail Audit', desc: 'Inspección en tienda para verificar disponibilidad de producto, precios, exhibición y participación de espacio frente a la competencia.' },
+    ],
+  },
+  {
+    id: 'digitales',
+    label: 'Herramientas Digitales',
+    subtitle: 'Tecnología y datos en tiempo real',
+    icon: Cpu,
+    tools: [
+      { icon: Radio, name: 'Escucha social (Social Listening)', desc: 'Monitoreo e interpretación automatizada de conversaciones, menciones y sentimientos en redes sociales y plataformas digitales.' },
+      { icon: Map, name: 'Geomarketing y análisis espacial', desc: 'Procesamiento de datos de ubicación geográfica (GPS, tráfico peatonal, mapas de calor) para analizar zonas de influencia y cobertura.' },
+      { icon: Activity, name: 'Analítica web / Clickstream', desc: 'Rastreo de la navegación, tasa de conversión y comportamiento de usuarios en sitios web o aplicaciones.' },
+      { icon: Brain, name: 'Pruebas biométricas (Neuroinvestigación)', desc: 'Eye-tracking, codificación facial o respuesta galvánica de la piel para medir reacciones emocionales o atención inconsciente.' },
+    ],
+  },
+  {
+    id: 'estrategico',
+    label: 'Análisis Estratégico',
+    subtitle: 'Entorno y competencia',
+    icon: Target,
+    tools: [
+      { icon: Swords, name: 'Inteligencia competitiva / Benchmarking', desc: 'Recopilación y análisis sistemático de información pública sobre competidores, productos y estrategias del mercado.' },
+      { icon: FileSearch, name: 'Análisis documental (Desk Research)', desc: 'Revisión de fuentes secundarias como reportes de la industria, censos oficiales, estudios académicos y artículos especializados.' },
+    ],
+  },
 ];
 
 export default function Soluciones({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
   const { ref, inView } = useInView(0.2);
+  const [activeCat, setActiveCat] = useState(0);
+  const activeCategory = toolCategories[activeCat];
 
   return (
     <div className={`pt-20 transition-colors duration-300 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
@@ -70,24 +138,73 @@ export default function Soluciones({ onNavigate }: PageProps) {
         </div>
       </section>
 
-      {/* Capabilities */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12">
+      {/* Capabilities / Tools */}
+      <section className={`py-20 lg:py-28 relative overflow-hidden ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+        <div className="absolute top-0 right-0 w-[28rem] h-[28rem] bg-[#fd3838]/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+          <div className="text-center mb-14">
             <span className="section-label">Nuestras capacidades</span>
-            <h2 className="section-title text-3xl mt-4">Las metodologías son herramientas, no servicios</h2>
+            <h2 className="section-title text-3xl md:text-4xl mt-4">Las metodologías son herramientas, no servicios</h2>
             <p className={`mt-6 text-lg max-w-2xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              XERYUS integra múltiples metodologías para diseñar la solución perfecta para cada reto. Estas son nuestras herramientas:
+              XERYUS combina métodos cuantitativos, cualitativos, observacionales, digitales y estratégicos para diseñar la solución exacta a cada reto.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {capabilities.map((cap, i) => (
-              <div key={i} className={`flex items-center gap-3 p-4 border ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-white'}`}>
-                <Check size={16} className="text-[#fd3838] flex-shrink-0" />
-                <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{cap}</span>
+          {/* Category tabs */}
+          <div className="flex flex-wrap justify-center gap-3 mb-4">
+            {toolCategories.map((cat, i) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCat(i)}
+                className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold tracking-wide uppercase transition-all duration-300
+                  ${activeCat === i
+                    ? 'bg-[#fd3838] text-white shadow-lg shadow-red-900/20 scale-105'
+                    : isDark
+                      ? 'text-gray-400 border border-white/10 hover:border-[#fd3838]/40 hover:text-white'
+                      : 'text-gray-600 border border-black/10 hover:border-[#fd3838]/40 hover:text-black'
+                  }`}
+              >
+                <cat.icon size={15} />
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          <div key={`subtitle-${activeCat}`} className="text-center mb-10 animate-fade-in">
+            <p className={`text-sm tracking-wide ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+              {activeCategory.subtitle} · {activeCategory.tools.length} herramientas
+            </p>
+          </div>
+
+          {/* Tool list */}
+          <div key={`tools-${activeCat}`} className="grid md:grid-cols-2 gap-3 max-w-5xl mx-auto">
+            {activeCategory.tools.map((tool, i) => (
+              <div
+                key={tool.name}
+                className={`group flex items-start gap-4 p-5 border-l-2 border-transparent transition-all duration-300 cursor-default animate-fade-in-up hover:-translate-y-0.5
+                  ${isDark ? 'bg-black hover:bg-gray-900 hover:border-[#fd3838]' : 'bg-white hover:shadow-lg hover:border-[#fd3838]'}`}
+                style={{ animationDelay: `${i * 0.06}s` }}
+              >
+                <div className={`w-11 h-11 flex items-center justify-center flex-shrink-0 transition-colors duration-300
+                  ${isDark ? 'bg-white/5 group-hover:bg-[#fd3838]' : 'bg-gray-100 group-hover:bg-[#fd3838]'}`}>
+                  <tool.icon size={18} className="text-[#fd3838] group-hover:text-white transition-colors duration-300" />
+                </div>
+                <div>
+                  <h4 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{tool.name}</h4>
+                  <p className={`text-xs mt-1.5 leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{tool.desc}</p>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* Closing emphasis */}
+          <div className="flex items-center gap-4 justify-center flex-wrap mt-16">
+            <div className="red-line" />
+            <p className={`text-sm md:text-base font-medium text-center ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Y estas son solo algunas de nuestras herramientas — combinamos las que tu reto necesita.
+            </p>
+            <div className="red-line" />
           </div>
         </div>
       </section>
