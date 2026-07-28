@@ -6,31 +6,55 @@ const DEFAULT_VIDEO_URL = 'https://res.cloudinary.com/fx7hcjz4/video/upload/v178
 const POSTER_URL = '/assets/videos/portada-video.jpeg';
 
 const clients = [
-  'BANORTE', 'CITY GROUP', 'BBVA', 'TELEFÓNICA', 'MOVISTAR', 'COPPEL',
-  'SORIANA', 'BIMBO', 'GRUPO MODELO', 'FEMSA', 'ALFA', 'CUERVO',
-  'CHILI\'S', 'WALMART', 'SAMS CLUB', 'VICTORIA', 'PANDA', 'BOSQUE',
+  { name: 'Coca-Cola', file: 'coca-cola.png' },
+  { name: 'KIA', file: 'kia.png' },
+  { name: 'Mercedes-Benz', file: 'mercedes-benz.png' },
+  { name: 'ITESO', file: 'iteso.png' },
+  { name: 'Javer', file: 'javer.png' },
+  { name: 'Vitromex', file: 'vitromex.png' },
+  { name: 'O\'Reilly', file: 'oreilly.png' },
+  { name: 'ProMéxico', file: 'promexico.png' },
+  { name: 'Fortuna', file: 'fortuna.png' },
+  { name: 'Sentíes', file: 'senties.png' },
+  { name: 'Alteso', file: 'alteso.png' },
+  { name: 'CAB', file: 'cab.png' },
+  { name: 'Deyun Centro de Especialidades', file: 'deyun.png' },
+  { name: 'Sistemik', file: 'sistemik.png' },
+  { name: 'Vagual', file: 'vagual.png' },
+  { name: 'Sello Rojo', file: 'sello-rojo.png' },
+  { name: 'Tequila Huizache', file: 'tequila-huizache.png' },
+  { name: 'Chizy Chiz', file: 'chizychiz.png' },
+  { name: 'CPT', file: 'cpt.png' },
+  { name: 'Andrea Aragón', file: 'andrea-aragon.png' },
+  { name: 'Liz Muebles', file: 'liz-muebles.png' },
+  { name: 'Fortia', file: 'fortia.png' },
+  { name: 'K', file: 'logo-k.png' },
+  { name: 'Cliente XERYUS', file: 'recurso-22.png' },
 ];
 
 const rowA = clients.filter((_, i) => i % 2 === 0);
 const rowB = clients.filter((_, i) => i % 2 === 1);
 
-function MarqueeRow({ items, isDark, reverse }: { items: string[]; isDark: boolean; reverse?: boolean }) {
+function MarqueeRow({ items, isDark, reverse }: { items: typeof clients; isDark: boolean; reverse?: boolean }) {
   const doubled = [...items, ...items];
 
   return (
     <div className="relative overflow-hidden">
-      <div className={`flex gap-6 whitespace-nowrap ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
+      <div className={`flex gap-4 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
         {doubled.map((client, i) => (
           <div
             key={i}
-            className={`px-8 py-6 border text-2xl md:text-3xl font-bold tracking-wider transition-colors duration-300
+            className={`flex-shrink-0 w-44 h-24 md:w-52 md:h-28 flex items-center justify-center px-6 border transition-colors duration-300
               ${isDark
-                ? 'border-white/10 text-gray-500 hover:text-white hover:border-[#fd3838]/40'
-                : 'border-black/10 text-gray-400 hover:text-black hover:border-[#fd3838]/40'
+                ? 'border-white/10 bg-black hover:border-[#fd3838]/40'
+                : 'border-black/10 bg-white hover:border-[#fd3838]/40'
               }`}
-            style={{ fontFamily: 'Space Grotesk, sans-serif' }}
           >
-            {client}
+            <img
+              src={`/assets/clients/${client.file}`}
+              alt={client.name}
+              className={`max-h-12 md:max-h-14 max-w-full object-contain ${isDark ? '' : 'invert'}`}
+            />
           </div>
         ))}
       </div>
