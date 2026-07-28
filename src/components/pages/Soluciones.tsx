@@ -198,7 +198,7 @@ export default function Soluciones({ onNavigate }: PageProps) {
               onClick={() => onNavigate('contacto')}
               className="group inline-flex items-center gap-2 bg-[#fd3838] text-white px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] hover:shadow-xl hover:shadow-red-900/20 active:scale-95"
             >
-              Diseña tu combinación de herramientas
+              Quiero un estudio a la medida
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

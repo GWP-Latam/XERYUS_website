@@ -18,6 +18,7 @@ import Soluciones from '@/components/pages/Soluciones';
 import Factibilidad from '@/components/pages/Factibilidad';
 import Herramientas from '@/components/pages/Herramientas';
 import ToolDetail from '@/components/pages/ToolDetail';
+import IndustriaDetail from '@/components/pages/IndustriaDetail';
 import Blog from '@/components/pages/Blog';
 import Casos from '@/components/pages/Casos';
 import Contacto from '@/components/pages/Contacto';
@@ -28,7 +29,7 @@ function App() {
     const hash = window.location.hash.replace('#', '');
     return hash || 'home';
   });
-  const [pageData, setPageData] = useState<{ toolId?: string }>({});
+  const [pageData, setPageData] = useState<{ toolId?: string; industriaId?: string }>({});
 
   const handleNavigate = (newPage: string, data?: Record<string, unknown>) => {
     setPage(newPage);
@@ -53,6 +54,7 @@ function App() {
       case 'factibilidad': return <Factibilidad onNavigate={handleNavigate} />;
       case 'herramientas': return <Herramientas onNavigate={handleNavigate} />;
       case 'tool-detail': return <ToolDetail onNavigate={handleNavigate} toolId={pageData.toolId} />;
+      case 'industria-detail': return <IndustriaDetail onNavigate={handleNavigate} industriaId={pageData.industriaId} />;
       case 'blog': return <Blog onNavigate={handleNavigate} />;
       case 'casos': return <Casos onNavigate={handleNavigate} />;
       case 'contacto': return <Contacto />;
@@ -61,7 +63,7 @@ function App() {
           <Hero onNavigate={handleNavigate} />
           <TrustBar />
           <InstitutionalShowcase />
-          <Challenges />
+          <Challenges onNavigate={handleNavigate} />
           <Differentiators />
           <HowWeWork />
           <SuccessCases />
