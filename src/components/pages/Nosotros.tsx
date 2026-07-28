@@ -290,7 +290,7 @@ export default function Nosotros({ onNavigate }: PageProps) {
           </div>
 
           <div className="group/marquee overflow-hidden">
-            <div className="flex gap-5 w-max animate-team-marquee group-hover/marquee:[animation-play-state:paused] pl-[calc(50vw-4.5rem)] sm:pl-[calc(50vw-5.5rem)] md:pl-[calc(50vw-6rem)]">
+            <div className="flex gap-5 w-max animate-team-marquee group-hover/marquee:[animation-play-state:paused]">
               {[...team, ...team].map((member, i) => (
                 <TeamCard
                   key={`${member._id}-${i}`}
