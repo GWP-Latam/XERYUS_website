@@ -73,6 +73,8 @@ export default function InstitutionalShowcase() {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
+      video.muted = false;
+      setIsMuted(false);
       video.play();
       setIsPlaying(true);
     } else {
@@ -109,9 +111,9 @@ export default function InstitutionalShowcase() {
   };
 
   return (
-    <section className={`py-20 lg:py-28 transition-colors duration-300 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
+    <section className={`py-14 md:py-20 lg:py-28 transition-colors duration-300 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
           {/* Left - Institutional video, near half the screen */}
           <div className="flex flex-col">
             <div className="flex items-center gap-3 mb-6">
@@ -143,31 +145,31 @@ export default function InstitutionalShowcase() {
                   aria-label="Reproducir video institucional"
                   className="absolute inset-0 flex items-center justify-center"
                 >
-                  <span className="absolute w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_0_40px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:scale-110" />
-                  <Play size={26} className="relative text-white fill-white ml-1 drop-shadow" />
+                  <span className="absolute w-14 h-14 md:w-20 md:h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_0_40px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:scale-110" />
+                  <Play size={18} className="relative text-white fill-white ml-1 drop-shadow md:w-[26px] md:h-[26px]" />
                 </button>
               )}
 
               <div
-                className={`absolute bottom-0 left-0 right-0 px-4 pb-3 pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+                className={`absolute bottom-0 left-0 right-0 px-3 md:px-4 pb-2 md:pb-3 pt-6 md:pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
               >
-                <div onClick={handleSeek} className="h-1 w-full rounded-full bg-white/20 cursor-pointer mb-3">
+                <div onClick={handleSeek} className="h-1 w-full rounded-full bg-white/20 cursor-pointer mb-2 md:mb-3">
                   <div
                     className="h-full rounded-full bg-[#fd3838] transition-[width] duration-150"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <button onClick={togglePlay} aria-label={isPlaying ? 'Pausar' : 'Reproducir'} className="text-white/90 hover:text-white transition-colors">
-                      {isPlaying ? <Pause size={16} className="fill-white" /> : <Play size={16} className="fill-white ml-0.5" />}
+                      {isPlaying ? <Pause size={14} className="fill-white md:w-4 md:h-4" /> : <Play size={14} className="fill-white ml-0.5 md:w-4 md:h-4" />}
                     </button>
                     <button onClick={toggleMute} aria-label={isMuted ? 'Activar sonido' : 'Silenciar'} className="text-white/90 hover:text-white transition-colors">
-                      {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                      {isMuted ? <VolumeX size={14} className="md:w-4 md:h-4" /> : <Volume2 size={14} className="md:w-4 md:h-4" />}
                     </button>
                   </div>
                   <button onClick={toggleFullscreen} aria-label="Pantalla completa" className="text-white/90 hover:text-white transition-colors">
-                    <Maximize size={15} />
+                    <Maximize size={13} className="md:w-[15px] md:h-[15px]" />
                   </button>
                 </div>
               </div>

@@ -1,0 +1,25 @@
+name: Sincronizar equipo desde Notion
+
+on:
+  schedule:
+    # Una vez al día, 13:00 UTC = 07:00 México (antes de la jornada laboral).
+    - cron: '0 13 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install @sanity/client --no-save
+
+      - name: Sincronizar
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          SANITY_TOKEN: ${{ secrets.SANITY_TOKEN }}
+        run: node scripts/sync-team-from-notion.mjs

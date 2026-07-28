@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@/context/ThemeContext';
 import LoadingScreen from '@/components/LoadingScreen';
+import CustomCursor from '@/components/CustomCursor';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Hero from '@/components/home/Hero';
@@ -21,6 +22,7 @@ import ToolDetail from '@/components/pages/ToolDetail';
 import IndustriaDetail from '@/components/pages/IndustriaDetail';
 import Blog from '@/components/pages/Blog';
 import Casos from '@/components/pages/Casos';
+import Portafolio from '@/components/pages/Portafolio';
 import Contacto from '@/components/pages/Contacto';
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
       case 'industria-detail': return <IndustriaDetail onNavigate={handleNavigate} industriaId={pageData.industriaId} />;
       case 'blog': return <Blog onNavigate={handleNavigate} />;
       case 'casos': return <Casos onNavigate={handleNavigate} />;
+      case 'portafolio': return <Portafolio onNavigate={handleNavigate} />;
       case 'contacto': return <Contacto />;
       default: return (
         <>
@@ -77,6 +80,7 @@ function App() {
 
   return (
     <ThemeProvider>
+      <CustomCursor />
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
       <div className="min-h-screen">
         <Navbar currentPage={page} onNavigate={handleNavigate} />

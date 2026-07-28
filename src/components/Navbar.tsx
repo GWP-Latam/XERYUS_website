@@ -20,6 +20,7 @@ const navLinks = [
       { label: 'Analizar competencia', page: 'soluciones' },
     ]
   },
+  { label: 'Portafolio', page: 'portafolio' },
   { label: 'Herramientas', page: 'herramientas' },
   { label: 'Blog', page: 'blog' },
 ];

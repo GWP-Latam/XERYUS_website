@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useInView, useAnimatedCounter } from '@/hooks/useAnimation';
-import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight } from 'lucide-react';
+import { fetchTeamMembers, type TeamMember } from '@/lib/teamQueries';
+import { urlFor } from '@/lib/sanityImage';
+import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, X, Mail } from 'lucide-react';
 
 interface PageProps {
   onNavigate: (page: string) => void;
@@ -29,8 +32,87 @@ function StatCounter({ value, suffix, label, isDark }: { value: number; suffix: 
   );
 }
 
+function TeamCard({ member, isDark, onClick, delay }: { member: TeamMember; isDark: boolean; onClick: () => void; delay: number }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{ animationDelay: `${delay}s` }}
+      className="group text-left animate-fade-in-up"
+    >
+      <div className={`relative aspect-square overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <img
+          src={urlFor(member.photo).width(400).height(400).fit('crop').auto('format').url()}
+          alt={member.name}
+          className="w-full h-full object-cover hue-rotate-[140deg] saturate-150 transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+      <h3 className={`mt-3 text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{member.name}</h3>
+      <p className="text-xs text-[#fd3838] font-medium tracking-wide mt-0.5">{member.role}</p>
+    </button>
+  );
+}
+
+function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: boolean; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className={`relative w-full max-w-md overflow-hidden animate-fade-in-up ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
+        <button
+          onClick={onClose}
+          aria-label="Cerrar"
+          className={`absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/5 hover:bg-black/10 text-black'}`}
+        >
+          <X size={18} />
+        </button>
+        <div className="aspect-square">
+          <img
+            src={urlFor(member.photo).width(600).height(600).fit('crop').auto('format').url()}
+            alt={member.name}
+            className="w-full h-full object-cover hue-rotate-[140deg] saturate-150"
+          />
+        </div>
+        <div className="p-6">
+          <div className="red-line mb-3" />
+          <h3 className="text-xl font-semibold">{member.name}</h3>
+          <p className="text-sm text-[#fd3838] font-medium tracking-wide mt-1">{member.role}</p>
+          {member.description && (
+            <p className={`mt-4 text-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{member.description}</p>
+          )}
+          {member.email && (
+            <a
+              href={`mailto:${member.email}`}
+              className="mt-4 flex items-center gap-2 text-xs text-[#fd3838] font-semibold tracking-wide"
+            >
+              <Mail size={13} />
+              {member.email}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Nosotros({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
+  const { ref: teamRef, inView: teamInView } = useInView(0.05);
+  const [team, setTeam] = useState<TeamMember[] | null>(null);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+
+  useEffect(() => {
+    fetchTeamMembers().then(setTeam).catch(() => setTeam([]));
+  }, []);
 
   return (
     <div className={`pt-20 transition-colors duration-300 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
@@ -40,7 +122,7 @@ export default function Nosotros({ onNavigate }: PageProps) {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
           <span className="section-label">Nosotros</span>
           <h1 className="section-title text-4xl md:text-5xl lg:text-6xl mt-4 max-w-4xl">
-            Una firma de inteligencia estratégica con <span className="text-[#fd3838]">visión global</span>
+            Una firma de inteligencia de mercados con <span className="text-[#fd3838]">visión global</span>
           </h1>
           <p className={`mt-8 text-lg max-w-2xl leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             XERYUS nació para transformar la forma en que las empresas toman decisiones. No somos una agencia de levantamiento de información: somos una firma de inteligencia de mercados que acompaña a organizaciones a reducir riesgos y acelerar crecimiento con evidencia.
@@ -54,14 +136,14 @@ export default function Nosotros({ onNavigate }: PageProps) {
           <div className="grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-4">
               <span className="section-label">Historia</span>
-              <h2 className="section-title text-3xl mt-4">De agencia a firma de inteligencia</h2>
+              <h2 className="section-title text-3xl mt-4">Más de 35 años generando inteligencia de mercado</h2>
             </div>
             <div className="lg:col-span-8 space-y-6">
               <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Fundada hace más de 15 años, XERYUS comenzó como un equipo de investigación con una convicción: las empresas merecen más que datos. Merecen decisiones respaldadas por evidencia.
+                Somos un Grupo con más de 35 años realizando proyectos de Investigación de Mercados para diferentes industrias y sectores, descubriendo y analizando oportunidades de negocio tanto en México, como en Estados Unidos, Centroamérica y Europa.
               </p>
               <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Hoy somos una firma con presencia en tres países, Top 15 nacional en investigación de mercados en México, y un equipo multidisciplinario que combina investigación, analítica avanzada y estrategia de negocio.
+                Planeamos y ejecutamos Estudios de Mercado basados en tus clientes, tu industria y tus competidores, analizando las características más importantes para tu empresa, con la información, los fundamentos y los datos más valiosos por parte del mercado.
               </p>
             </div>
           </div>
@@ -109,6 +191,30 @@ export default function Nosotros({ onNavigate }: PageProps) {
           </div>
         </div>
       </section>
+
+      {/* Team */}
+      {team && team.length > 0 && (
+        <section className="py-20">
+          <div ref={teamRef} className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="flex items-center gap-3 mb-4">
+              <Users size={18} className="text-[#fd3838]" />
+              <span className="section-label">Equipo</span>
+            </div>
+            <h2 className="section-title text-3xl mt-2 mb-12">Quiénes hacen posible XERYUS</h2>
+            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 transition-opacity duration-500 ${teamInView ? 'opacity-100' : 'opacity-0'}`}>
+              {team.map((member, i) => (
+                <TeamCard
+                  key={member._id}
+                  member={member}
+                  isDark={isDark}
+                  delay={Math.min(i, 10) * 0.05}
+                  onClick={() => setSelectedMember(member)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Top 15 highlight */}
       <section className="py-20">
@@ -179,7 +285,7 @@ export default function Nosotros({ onNavigate }: PageProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <StatCounter value={500} suffix="+" label="Proyectos" isDark={isDark} />
             <StatCounter value={200} suffix="+" label="Clientes" isDark={isDark} />
-            <StatCounter value={15} suffix="" label="Años" isDark={isDark} />
+            <StatCounter value={35} suffix="+" label="Años" isDark={isDark} />
             <StatCounter value={3} suffix="" label="Países" isDark={isDark} />
           </div>
         </div>
@@ -198,6 +304,10 @@ export default function Nosotros({ onNavigate }: PageProps) {
           </button>
         </div>
       </section>
+
+      {selectedMember && (
+        <TeamModal member={selectedMember} isDark={isDark} onClose={() => setSelectedMember(null)} />
+      )}
     </div>
   );
 }

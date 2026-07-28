@@ -139,6 +139,50 @@
   @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
 }
 
+/* Custom brand cursor */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #fd3939;
+  pointer-events: none;
+  z-index: 10000;
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, opacity 0.2s ease;
+  will-change: transform;
+}
+
+.cursor-dot--active {
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+}
+
+.cursor-icon {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 38px;
+  margin-left: -15px;
+  margin-top: -15px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+
 /* Noise texture overlay */
 .noise {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
