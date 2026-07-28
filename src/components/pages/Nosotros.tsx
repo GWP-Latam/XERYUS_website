@@ -65,7 +65,7 @@ function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: bo
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative w-full max-w-md overflow-hidden animate-fade-in-up ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
+      <div className={`relative w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
         <button
           onClick={onClose}
           aria-label="Cerrar"
@@ -80,7 +80,7 @@ function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: bo
             className="w-full h-full object-cover hue-rotate-[140deg]"
           />
         </div>
-        <div className="p-6">
+        <div className="p-6 pb-8">
           <div className="red-line mb-3" />
           <h3 className="text-xl font-semibold">{member.name}</h3>
           <p className="text-sm text-[#fd3838] font-medium tracking-wide mt-1">{member.role}</p>
