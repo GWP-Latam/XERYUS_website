@@ -39,21 +39,18 @@ function MarqueeRow({ items, isDark, reverse }: { items: typeof clients; isDark:
   const doubled = [...items, ...items];
 
   return (
-    <div className="relative overflow-hidden">
-      <div className={`flex gap-4 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
+    <div className="relative overflow-hidden flex-1 flex items-center">
+      <div className={`flex gap-8 md:gap-10 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}>
         {doubled.map((client, i) => (
           <div
             key={i}
-            className={`flex-shrink-0 w-44 h-24 md:w-52 md:h-28 flex items-center justify-center px-6 border transition-colors duration-300
-              ${isDark
-                ? 'border-white/10 bg-black hover:border-[#fd3838]/40'
-                : 'border-black/10 bg-white hover:border-[#fd3838]/40'
-              }`}
+            className="flex-shrink-0 w-32 h-16 md:w-40 md:h-20 flex items-center justify-center transition-transform duration-300 hover:scale-105"
           >
             <img
               src={`/assets/clients/${client.file}`}
               alt={client.name}
-              className={`max-h-12 md:max-h-14 max-w-full object-contain ${isDark ? '' : 'invert'}`}
+              className="max-h-full max-w-full object-contain"
+              style={!isDark ? { filter: 'invert(65%)' } : undefined}
             />
           </div>
         ))}
@@ -114,9 +111,16 @@ export default function InstitutionalShowcase() {
   return (
     <section className={`py-20 lg:py-28 transition-colors duration-300 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
           {/* Left - Institutional video, near half the screen */}
-          <div className="group relative">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="red-line" />
+              <p className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                ¿Por qué investigar a tu mercado?
+              </p>
+            </div>
+            <div className="group relative">
             <div className={`relative aspect-video overflow-hidden ${isDark ? 'bg-black' : 'bg-gray-900'}`}>
               <video
                 ref={videoRef}
@@ -168,18 +172,19 @@ export default function InstitutionalShowcase() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Right - Double marquee carousel */}
-          <div>
-            <div className="flex items-center gap-3 mb-10">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
               <div className="red-line" />
               <p className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Empresas que han confiado en nosotros
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex-1 flex flex-col justify-between gap-4 min-h-[220px]">
               <MarqueeRow items={rowA} isDark={isDark} />
               <MarqueeRow items={rowB} isDark={isDark} reverse />
             </div>
