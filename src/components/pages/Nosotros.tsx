@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useAnimatedCounter, useInView } from '@/hooks/useAnimation';
 import { fetchTeamMembers, type TeamMember } from '@/lib/teamQueries';
 import { urlFor } from '@/lib/sanityImage';
-import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, ChevronLeft, ChevronRight, X, Mail } from 'lucide-react';
+import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, X, Mail } from 'lucide-react';
 
 interface PageProps {
   onNavigate: (page: string) => void;
@@ -36,15 +36,14 @@ function TeamCard({ member, isDark, onClick }: { member: TeamMember; isDark: boo
   return (
     <button
       onClick={onClick}
-      className="group text-left flex-shrink-0 snap-start w-36 sm:w-44 md:w-48"
+      className="group text-left flex-shrink-0 w-36 sm:w-44 md:w-48"
     >
-      <div className={`relative aspect-square overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <div className="relative aspect-square overflow-hidden">
         <img
           src={urlFor(member.photo).width(400).height(400).fit('crop').auto('format').url()}
           alt={member.name}
           className="w-full h-full object-cover hue-rotate-[140deg] transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <h3 className={`mt-3 text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{member.name}</h3>
       <p className="text-xs text-[#fd3838] font-medium tracking-wide mt-0.5">{member.role}</p>
@@ -105,7 +104,6 @@ function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: bo
 
 export default function Nosotros({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
-  const teamScrollRef = useRef<HTMLDivElement>(null);
   const [team, setTeam] = useState<TeamMember[] | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
@@ -282,41 +280,20 @@ export default function Nosotros({ onNavigate }: PageProps) {
 
       {/* Team */}
       {team && team.length > 0 && (
-        <section className={`py-20 border-t ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-gray-50'}`}>
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-10 gap-4">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Users size={18} className="text-[#fd3838]" />
-                  <span className="section-label">Equipo</span>
-                </div>
-                <h2 className="section-title text-3xl">Quiénes hacen posible XERYUS</h2>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => teamScrollRef.current?.scrollBy({ left: -300, behavior: 'smooth' })}
-                  aria-label="Anterior"
-                  className={`p-2 border transition-colors duration-200 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  onClick={() => teamScrollRef.current?.scrollBy({ left: 300, behavior: 'smooth' })}
-                  aria-label="Siguiente"
-                  className={`p-2 border transition-colors duration-200 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
+        <section className={`py-20 border-t overflow-hidden ${isDark ? 'border-white/5' : 'border-black/5'}`}>
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-10">
+            <div className="flex items-center gap-3 mb-4">
+              <Users size={18} className="text-[#fd3838]" />
+              <span className="section-label">Equipo</span>
             </div>
+            <h2 className="section-title text-3xl">Quiénes hacen posible XERYUS</h2>
+          </div>
 
-            <div
-              ref={teamScrollRef}
-              className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar"
-            >
-              {team.map(member => (
+          <div className="group/marquee overflow-hidden">
+            <div className="flex gap-5 w-max animate-team-marquee group-hover/marquee:[animation-play-state:paused] pl-[calc(50vw-4.5rem)] sm:pl-[calc(50vw-5.5rem)] md:pl-[calc(50vw-6rem)]">
+              {[...team, ...team].map((member, i) => (
                 <TeamCard
-                  key={member._id}
+                  key={`${member._id}-${i}`}
                   member={member}
                   isDark={isDark}
                   onClick={() => setSelectedMember(member)}
