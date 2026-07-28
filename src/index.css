@@ -139,6 +139,15 @@
   @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
 }
 
+/* Hide scrollbar for carousels that scroll via buttons/swipe */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Custom brand cursor */
 .custom-cursor-active,
 .custom-cursor-active * {

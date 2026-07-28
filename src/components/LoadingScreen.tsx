@@ -24,6 +24,8 @@ export default function LoadingScreen({ onFinish }: LoadingScreenProps) {
     const video = videoRef.current;
     if (!video) return;
 
+    video.playbackRate = 1.5;
+
     const tryPlay = async () => {
       try {
         await video.play();

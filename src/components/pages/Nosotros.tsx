@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { useInView, useAnimatedCounter } from '@/hooks/useAnimation';
+import { useAnimatedCounter, useInView } from '@/hooks/useAnimation';
 import { fetchTeamMembers, type TeamMember } from '@/lib/teamQueries';
 import { urlFor } from '@/lib/sanityImage';
-import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, X, Mail } from 'lucide-react';
+import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, ChevronLeft, ChevronRight, X, Mail } from 'lucide-react';
 
 interface PageProps {
   onNavigate: (page: string) => void;
@@ -32,18 +32,17 @@ function StatCounter({ value, suffix, label, isDark }: { value: number; suffix: 
   );
 }
 
-function TeamCard({ member, isDark, onClick, delay }: { member: TeamMember; isDark: boolean; onClick: () => void; delay: number }) {
+function TeamCard({ member, isDark, onClick }: { member: TeamMember; isDark: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      style={{ animationDelay: `${delay}s` }}
-      className="group text-left animate-fade-in-up"
+      className="group text-left flex-shrink-0 snap-start w-36 sm:w-44 md:w-48"
     >
       <div className={`relative aspect-square overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <img
           src={urlFor(member.photo).width(400).height(400).fit('crop').auto('format').url()}
           alt={member.name}
-          className="w-full h-full object-cover hue-rotate-[140deg] saturate-150 transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover hue-rotate-[140deg] transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
@@ -79,7 +78,7 @@ function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: bo
           <img
             src={urlFor(member.photo).width(600).height(600).fit('crop').auto('format').url()}
             alt={member.name}
-            className="w-full h-full object-cover hue-rotate-[140deg] saturate-150"
+            className="w-full h-full object-cover hue-rotate-[140deg]"
           />
         </div>
         <div className="p-6">
@@ -106,7 +105,7 @@ function TeamModal({ member, isDark, onClose }: { member: TeamMember; isDark: bo
 
 export default function Nosotros({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
-  const { ref: teamRef, inView: teamInView } = useInView(0.05);
+  const teamScrollRef = useRef<HTMLDivElement>(null);
   const [team, setTeam] = useState<TeamMember[] | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
@@ -191,30 +190,6 @@ export default function Nosotros({ onNavigate }: PageProps) {
           </div>
         </div>
       </section>
-
-      {/* Team */}
-      {team && team.length > 0 && (
-        <section className="py-20">
-          <div ref={teamRef} className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Users size={18} className="text-[#fd3838]" />
-              <span className="section-label">Equipo</span>
-            </div>
-            <h2 className="section-title text-3xl mt-2 mb-12">Quiénes hacen posible XERYUS</h2>
-            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 transition-opacity duration-500 ${teamInView ? 'opacity-100' : 'opacity-0'}`}>
-              {team.map((member, i) => (
-                <TeamCard
-                  key={member._id}
-                  member={member}
-                  isDark={isDark}
-                  delay={Math.min(i, 10) * 0.05}
-                  onClick={() => setSelectedMember(member)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Top 15 highlight */}
       <section className="py-20">
@@ -304,6 +279,53 @@ export default function Nosotros({ onNavigate }: PageProps) {
           </button>
         </div>
       </section>
+
+      {/* Team */}
+      {team && team.length > 0 && (
+        <section className={`py-20 border-t ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-gray-50'}`}>
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="flex items-end justify-between mb-10 gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <Users size={18} className="text-[#fd3838]" />
+                  <span className="section-label">Equipo</span>
+                </div>
+                <h2 className="section-title text-3xl">Quiénes hacen posible XERYUS</h2>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+                <button
+                  onClick={() => teamScrollRef.current?.scrollBy({ left: -300, behavior: 'smooth' })}
+                  aria-label="Anterior"
+                  className={`p-2 border transition-colors duration-200 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  onClick={() => teamScrollRef.current?.scrollBy({ left: 300, behavior: 'smooth' })}
+                  aria-label="Siguiente"
+                  className={`p-2 border transition-colors duration-200 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={teamScrollRef}
+              className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar"
+            >
+              {team.map(member => (
+                <TeamCard
+                  key={member._id}
+                  member={member}
+                  isDark={isDark}
+                  onClick={() => setSelectedMember(member)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {selectedMember && (
         <TeamModal member={selectedMember} isDark={isDark} onClose={() => setSelectedMember(null)} />
