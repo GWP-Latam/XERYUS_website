@@ -15,10 +15,12 @@ const values = [
   { icon: Eye, title: 'Visión estratégica', desc: 'No recolectamos datos. Entregamos inteligencia accionable para decisiones reales.' },
 ];
 
+// x/y son % de posición sobre el mapa mundial embebido (proyección Mercator,
+// bbox lon -180..180, lat -58..78), calculados a partir de sus coordenadas reales.
 const locations = [
-  { city: 'Guadalajara', country: 'México', query: 'Guadalajara, Jalisco, México' },
-  { city: 'Austin', country: 'EE.UU.', query: 'Austin, Texas, USA' },
-  { city: 'París', country: 'Francia', query: 'Paris, France' },
+  { city: 'Guadalajara', country: 'México', x: 21.3, y: 53.9 },
+  { city: 'Austin', country: 'EE.UU.', x: 22.85, y: 48.4 },
+  { city: 'París', country: 'Francia', x: 50.65, y: 36.5 },
 ];
 
 function StatCounter({ value, suffix, label, isDark }: { value: number; suffix: string; label: string; isDark: boolean }) {
@@ -199,9 +201,7 @@ export default function Nosotros({ onNavigate }: PageProps) {
           <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             Formamos parte del ranking de mejores agencias de Investigación de Mercados en <span className={isDark ? 'text-white font-semibold' : 'text-black font-semibold'}>TODO MÉXICO</span>.
           </p>
-          <div className={`mt-10 border overflow-hidden ${isDark ? 'border-white/10 bg-gray-950' : 'border-black/10 bg-gray-50'}`}>
-            <img src="/merca2_0.png" alt="Ranking de agencias de Investigación de Mercados en México" className="w-full h-auto object-contain" />
-          </div>
+          <img src="/merca2_0.png" alt="Ranking de agencias de Investigación de Mercados en México" className="mt-10 w-full max-w-lg mx-auto h-auto object-contain" />
         </div>
       </section>
 
@@ -213,25 +213,39 @@ export default function Nosotros({ onNavigate }: PageProps) {
             <h2 className="section-title text-3xl mt-4">Tres ciudades, una visión</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {locations.map(loc => (
-              <div key={loc.city} className={`border overflow-hidden ${isDark ? 'border-white/10 bg-black' : 'border-black/10 bg-white'}`}>
-                <div className="aspect-square">
-                  <iframe
-                    title={`Mapa de ${loc.city}`}
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(loc.query)}&output=embed`}
-                    className={`w-full h-full border-0 ${isDark ? 'grayscale invert-[92%] contrast-[90%]' : 'grayscale'}`}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    <Globe2 size={14} className="text-[#fd3838]" />
-                    <span className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{loc.city}</span>
+          <div className={`relative border overflow-hidden ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+            <div className="relative aspect-[2/1]">
+              <iframe
+                title="Mapa mundial: Guadalajara, Austin y París"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-180%2C-58%2C180%2C78&layer=mapnik"
+                className={`w-full h-full border-0 pointer-events-none ${isDark ? 'grayscale invert-[92%] contrast-[90%]' : 'grayscale'}`}
+                loading="lazy"
+              />
+              {locations.map(loc => (
+                <div
+                  key={loc.city}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 group/pin"
+                  style={{ left: `${loc.x}%`, top: `${loc.y}%` }}
+                >
+                  <span className="absolute inset-0 -m-2 rounded-full bg-[#fd3838]/40 animate-ping" />
+                  <span className="relative block w-3 h-3 rounded-full bg-[#fd3838] ring-2 ring-white" />
+                  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap px-2 py-1 text-xs font-semibold opacity-0 group-hover/pin:opacity-100 transition-opacity pointer-events-none
+                    ${isDark ? 'bg-black text-white' : 'bg-white text-black shadow-md'}`}>
+                    {loc.city}
                   </div>
-                  <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{loc.country}</span>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            {locations.map(loc => (
+              <div key={loc.city} className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <Globe2 size={14} className="text-[#fd3838]" />
+                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{loc.city}</span>
+                </div>
+                <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{loc.country}</span>
               </div>
             ))}
           </div>
