@@ -29,7 +29,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
   const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -59,14 +58,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             {navLinks.map(link => (
               <div key={link.page + link.label} className="relative group">
                 <button
-                  onClick={() => {
-                    if (!link.children) {
-                      onNavigate(link.page);
-                      setActiveDropdown(null);
-                    } else {
-                      setActiveDropdown(activeDropdown === link.label ? null : link.label);
-                    }
-                  }}
+                  onClick={() => onNavigate(link.page)}
                   className={`flex items-center gap-1 px-3 py-2 text-xs font-medium tracking-wide uppercase transition-colors duration-200
                     ${currentPage === link.page
                       ? 'text-[#fd3838]'
@@ -83,7 +75,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                     {link.children.map(child => (
                       <button
                         key={child.label}
-                        onClick={() => { onNavigate(child.page); setActiveDropdown(null); }}
+                        onClick={() => onNavigate(child.page)}
                         className={`w-full text-left px-4 py-2.5 text-xs font-medium tracking-wide transition-colors duration-150
                           ${isDark ? 'text-gray-300 hover:text-white hover:bg-white/5' : 'text-gray-600 hover:text-black hover:bg-gray-50'}`}
                       >

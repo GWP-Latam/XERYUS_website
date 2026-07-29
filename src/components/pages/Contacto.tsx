@@ -45,7 +45,7 @@ export default function Contacto() {
                     </div>
                     <div>
                       <div className="text-sm font-medium">Oficinas</div>
-                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>Guadalajara · Austin · París</div>
+                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>C. Corrientes #3071, Colomos Providencia, 44630, Guadalajara, Jalisco.</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -54,7 +54,7 @@ export default function Contacto() {
                     </div>
                     <div>
                       <div className="text-sm font-medium">Email</div>
-                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>contacto@xeryus.com</div>
+                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>contacto@xeryusinvest.com</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -63,16 +63,20 @@ export default function Contacto() {
                     </div>
                     <div>
                       <div className="text-sm font-medium">Teléfono</div>
-                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>+52 33 0000 0000</div>
+                      <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>+52 1 33 1385 7143</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className={`p-6 border-l-2 border-[#fd3838] ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Respondemos en menos de 24 horas hábiles. La primera consultoría de diagnóstico es sin costo.
-                </p>
+              <div className={`border overflow-hidden ${isDark ? 'border-white/5' : 'border-black/5'}`}>
+                <iframe
+                  title="Ubicación de Grupo WeProm"
+                  src="https://www.google.com/maps?q=Grupo+WeProm&output=embed"
+                  className={`w-full h-64 border-0 ${isDark ? 'grayscale invert-[92%] contrast-[90%]' : 'grayscale'}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
 

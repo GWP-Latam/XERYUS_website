@@ -15,7 +15,7 @@ interface PageProps {
 }
 
 const solutions = [
-  { icon: TrendingUp, title: 'Expandir una empresa', desc: 'Identificar oportunidades de crecimiento y nuevos mercados.', tag: 'Expansión' },
+  { icon: TrendingUp, title: 'Expandir una empresa', desc: 'Identificar oportunidades de crecimiento y nuevos mercados.', tag: 'Expansión', page: 'solucion-expansion' },
   { icon: ShoppingBag, title: 'Incrementar ventas', desc: 'Comprender qué impulsa la decisión de compra en tu categoría.', tag: 'Ventas' },
   { icon: Users, title: 'Conocer al consumidor', desc: 'Profundizar en hábitos, motivaciones y necesidades de tu audiencia.', tag: 'Consumer Insights' },
   { icon: Shield, title: 'Evaluar una marca', desc: 'Medir el posicionamiento y salud de tu marca frente a la competencia.', tag: 'Brand Equity' },
@@ -118,7 +118,8 @@ export default function Soluciones({ onNavigate }: PageProps) {
             {solutions.map((s, i) => (
               <div
                 key={i}
-                className={`group p-6 border transition-all duration-500 cursor-pointer ${inView ? 'animate-fade-in-up' : 'opacity-0'}
+                onClick={() => s.page && onNavigate(s.page)}
+                className={`group p-6 border transition-all duration-500 ${s.page ? 'cursor-pointer' : 'cursor-default'} ${inView ? 'animate-fade-in-up' : 'opacity-0'}
                   ${isDark ? 'bg-gray-950 border-white/5 hover:border-[#fd3838]/30' : 'bg-white border-black/5 hover:shadow-xl'}`}
                 style={{ animationDelay: `${(i % 4) * 0.1}s` }}
               >

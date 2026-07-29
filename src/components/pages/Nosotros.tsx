@@ -16,9 +16,9 @@ const values = [
 ];
 
 const locations = [
-  { city: 'Guadalajara', country: 'México', x: 25, y: 55 },
-  { city: 'Austin', country: 'EE.UU.', x: 22, y: 48 },
-  { city: 'París', country: 'Francia', x: 52, y: 38 },
+  { city: 'Guadalajara', country: 'México', query: 'Guadalajara, Jalisco, México' },
+  { city: 'Austin', country: 'EE.UU.', query: 'Austin, Texas, USA' },
+  { city: 'París', country: 'Francia', query: 'Paris, France' },
 ];
 
 function StatCounter({ value, suffix, label, isDark }: { value: number; suffix: string; label: string; isDark: boolean }) {
@@ -36,7 +36,7 @@ function TeamCard({ member, isDark, onClick }: { member: TeamMember; isDark: boo
   return (
     <button
       onClick={onClick}
-      className="group text-left flex-shrink-0 w-36 sm:w-44 md:w-48"
+      className="group text-center flex-shrink-0 w-36 sm:w-44 md:w-48"
     >
       <div className="relative aspect-square overflow-hidden">
         <img
@@ -195,10 +195,13 @@ export default function Nosotros({ onNavigate }: PageProps) {
           <div className="w-16 h-16 mx-auto bg-[#fd3838]/10 flex items-center justify-center mb-6">
             <Award size={28} className="text-[#fd3838]" />
           </div>
-          <h2 className="section-title text-3xl md:text-4xl mb-4">Top 15 Nacional</h2>
+          <h2 className="section-title text-3xl md:text-4xl mb-4">Ranking nacional</h2>
           <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Posicionados entre las 15 firmas más importantes de investigación de mercados en México, con proyección internacional.
+            Formamos parte del ranking de mejores agencias de Investigación de Mercados en <span className={isDark ? 'text-white font-semibold' : 'text-black font-semibold'}>TODO MÉXICO</span>.
           </p>
+          <div className={`mt-10 border overflow-hidden ${isDark ? 'border-white/10 bg-gray-950' : 'border-black/10 bg-gray-50'}`}>
+            <img src="/merca2_0.png" alt="Ranking de agencias de Investigación de Mercados en México" className="w-full h-auto object-contain" />
+          </div>
         </div>
       </section>
 
@@ -210,44 +213,27 @@ export default function Nosotros({ onNavigate }: PageProps) {
             <h2 className="section-title text-3xl mt-4">Tres ciudades, una visión</h2>
           </div>
 
-          <div className="relative max-w-4xl mx-auto">
-            {/* Simplified world map SVG */}
-            <svg viewBox="0 0 100 60" className="w-full h-auto">
-              <path
-                d="M5,30 Q15,20 25,25 T45,22 Q55,18 65,25 T85,22 L95,30 Q90,40 80,38 T60,40 Q50,45 40,40 T20,38 L10,35 Z"
-                fill="none"
-                stroke={isDark ? '#ffffff10' : '#00000010'}
-                strokeWidth="0.3"
-              />
-              <circle cx="25" cy="55" r="0.8" fill="#fd3838" />
-              <circle cx="22" cy="48" r="0.8" fill="#fd3838" />
-              <circle cx="52" cy="38" r="0.8" fill="#fd3838" />
-
-              {/* Connection lines */}
-              <line x1="25" y1="55" x2="22" y2="48" stroke="#fd3838" strokeWidth="0.2" strokeDasharray="1 1" opacity="0.5" />
-              <line x1="22" y1="48" x2="52" y2="38" stroke="#fd3838" strokeWidth="0.2" strokeDasharray="1 1" opacity="0.5" />
-              <line x1="25" y1="55" x2="52" y2="38" stroke="#fd3838" strokeWidth="0.2" strokeDasharray="1 1" opacity="0.5" />
-
-              {/* Pulse rings */}
-              {locations.map((loc, i) => (
-                <circle key={i} cx={loc.x} cy={loc.y} r="1.5" fill="none" stroke="#fd3838" strokeWidth="0.2" opacity="0.4">
-                  <animate attributeName="r" from="0.8" to="3" dur="2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.6" to="0" dur="2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
-                </circle>
-              ))}
-            </svg>
-
-            <div className="grid grid-cols-3 gap-4 mt-8">
-              {locations.map((loc, i) => (
-                <div key={i} className="text-center">
+          <div className="grid md:grid-cols-3 gap-6">
+            {locations.map(loc => (
+              <div key={loc.city} className={`border overflow-hidden ${isDark ? 'border-white/10 bg-black' : 'border-black/10 bg-white'}`}>
+                <div className="aspect-square">
+                  <iframe
+                    title={`Mapa de ${loc.city}`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(loc.query)}&output=embed`}
+                    className={`w-full h-full border-0 ${isDark ? 'grayscale invert-[92%] contrast-[90%]' : 'grayscale'}`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <div className="p-4 text-center">
                   <div className="flex items-center justify-center gap-2 mb-1">
                     <Globe2 size={14} className="text-[#fd3838]" />
                     <span className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{loc.city}</span>
                   </div>
                   <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{loc.country}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
