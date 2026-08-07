@@ -1,35 +1,47 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { Star, Quote, ChevronLeft, ChevronRight, Play, Pause, Film } from 'lucide-react';
+import { Star, Quote, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Roberto Mendoza',
-    role: 'Director de Expansión',
-    company: 'Grupo Inmobiliario del Norte',
+    name: 'Ricardo Fernández',
+    role: 'Gerente de Operaciones',
     rating: 5,
-    text: 'XERYUS transformó nuestra forma de tomar decisiones de expansión. Su análisis de factibilidad nos ahorró meses de incertidumbre y nos dio la confianza para avanzar con datos sólidos.',
-    videoUrl: '',
+    text: 'Desde el primer contacto sentí la seriedad con la que trabajan. Nos entregaron resultados claros y accionables en el tiempo que prometieron, sin rodeos ni sorpresas.',
+    videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146248/PROSIC_1_huoyj3.mp4',
+    client: 'PROSIC',
+    logo: '',
   },
   {
-    name: 'Carolina Vega',
-    role: 'CMO',
-    company: 'Marca de Consumo Líder',
+    name: 'Daniela Solís',
+    role: 'Coordinadora Académica',
     rating: 5,
-    text: 'No es una agencia más. Es un socio estratégico. Los reportes que entregan no solo describen el problema, sino que vienen con la solución ya estructurada y respaldada.',
-    videoUrl: '',
+    text: 'La atención fue impecable de principio a fin. Se notó la formalidad del equipo y la facilidad con la que adaptaron la metodología a nuestras necesidades específicas.',
+    videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146255/ITESO_1_f4d7pc.mp4',
+    client: 'ITESO',
+    logo: '/assets/clients/iteso.png',
   },
   {
-    name: 'James Patterson',
-    role: 'CEO',
-    company: 'Tech Ventures Austin',
+    name: 'Andrés Palomo',
+    role: 'Director Comercial',
     rating: 5,
-    text: 'Working with XERYUS gave us the clarity we needed before entering the Mexican market. Their hybrid methodology and actionable insights were exactly what our board needed.',
-    videoUrl: '',
+    text: 'Lo que más valoro es la rapidez con la que trabajan sin perder rigor. Nos ayudaron a tomar una decisión importante con información sólida, no con suposiciones.',
+    videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146252/Galo_1_u5mjg0.mp4',
+    client: 'Chizy Chiz Pizza',
+    logo: '/assets/clients/chizychiz.png',
+  },
+  {
+    name: 'Mariana Ibarra',
+    role: 'Directora de Desarrollo',
+    rating: 5,
+    text: 'Su asertividad al presentar los hallazgos y las recomendaciones fue justo lo que necesitábamos. Un equipo profesional, puntual y muy fácil de coordinar.',
+    videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146289/Tata_Vasco_1_fctlvk.mp4',
+    client: 'Caja Popular Tata Vasco',
+    logo: '/assets/clients/cpt.png',
   },
 ];
 
-function TestimonialVideo({ url, isDark }: { url: string; isDark: boolean }) {
+function TestimonialVideo({ url, client, logo }: { url: string; client: string; logo: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -49,19 +61,6 @@ function TestimonialVideo({ url, isDark }: { url: string; isDark: boolean }) {
     }
   };
 
-  if (!url) {
-    return (
-      <div className={`relative aspect-video overflow-hidden flex items-center justify-center ${isDark ? 'bg-gray-950' : 'bg-gray-100'}`}>
-        <div className="text-center px-8">
-          <div className={`w-14 h-14 mx-auto mb-4 flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
-            <Film size={22} className={isDark ? 'text-gray-600' : 'text-gray-400'} />
-          </div>
-          <p className={`text-xs tracking-wider uppercase ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Video próximamente</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="group relative aspect-video overflow-hidden bg-black">
       <video
@@ -75,6 +74,20 @@ function TestimonialVideo({ url, isDark }: { url: string; isDark: boolean }) {
         onContextMenu={e => e.preventDefault()}
         playsInline
       />
+
+      {/* Portada: nombre + logo + degradado oscuro, visible hasta que se reproduce */}
+      <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/70" />
+        <div className="relative text-center px-8">
+          {logo ? (
+            <img src={logo} alt={client} className="h-8 md:h-10 mx-auto mb-4 max-w-[65%] object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+          ) : (
+            <p className="text-white text-lg md:text-xl font-bold tracking-wide mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>{client}</p>
+          )}
+          <p className="text-white/50 text-[10px] tracking-[0.2em] uppercase">Testimonio en video</p>
+        </div>
+      </div>
+
       <button
         onClick={togglePlay}
         aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
@@ -116,7 +129,7 @@ export default function Testimonials() {
 
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           {/* Left - video */}
-          <TestimonialVideo url={activeTestimonial.videoUrl} isDark={isDark} />
+          <TestimonialVideo url={activeTestimonial.videoUrl} client={activeTestimonial.client} logo={activeTestimonial.logo} />
 
           {/* Right - quote carousel */}
           <div className="relative">
@@ -141,7 +154,7 @@ export default function Testimonials() {
                         </div>
                         <div className="text-left">
                           <div className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{t.name}</div>
-                          <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{t.role} · {t.company}</div>
+                          <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{t.role}</div>
                         </div>
                       </div>
                     </div>
