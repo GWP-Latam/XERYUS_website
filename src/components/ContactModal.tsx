@@ -5,10 +5,11 @@ import ContactFormCard from '@/components/ContactFormCard';
 interface ContactModalProps {
   isDark: boolean;
   prefillMessage?: string;
+  onNavigate: (page: string, data?: Record<string, unknown>) => void;
   onClose: () => void;
 }
 
-export default function ContactModal({ isDark, prefillMessage, onClose }: ContactModalProps) {
+export default function ContactModal({ isDark, prefillMessage, onNavigate, onClose }: ContactModalProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -38,7 +39,7 @@ export default function ContactModal({ isDark, prefillMessage, onClose }: Contac
           <h2 className="section-title text-2xl md:text-3xl mt-3 mb-6">
             Hablemos de tu <span className="text-[#fd3838]">próxima decisión</span>
           </h2>
-          <ContactFormCard isDark={isDark} prefillMessage={prefillMessage} />
+          <ContactFormCard isDark={isDark} prefillMessage={prefillMessage} onNavigate={onNavigate} />
         </div>
       </div>
     </div>

@@ -381,7 +381,7 @@ export default function ArticuloInvestigacionMercados({ onNavigate }: PageProps)
       </article>
 
       {contactPrefill !== null && (
-        <ContactModal isDark={isDark} prefillMessage={contactPrefill} onClose={() => setContactPrefill(null)} />
+        <ContactModal isDark={isDark} prefillMessage={contactPrefill} onNavigate={onNavigate} onClose={() => setContactPrefill(null)} />
       )}
     </div>
   );

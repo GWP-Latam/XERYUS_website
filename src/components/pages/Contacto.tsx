@@ -4,9 +4,10 @@ import ContactFormCard from '@/components/ContactFormCard';
 
 interface ContactoProps {
   prefillMessage?: string;
+  onNavigate: (page: string, data?: Record<string, unknown>) => void;
 }
 
-export default function Contacto({ prefillMessage }: ContactoProps) {
+export default function Contacto({ prefillMessage, onNavigate }: ContactoProps) {
   const { isDark } = useTheme();
 
   return (
@@ -77,7 +78,7 @@ export default function Contacto({ prefillMessage }: ContactoProps) {
 
             {/* Form */}
             <div className="lg:col-span-8">
-              <ContactFormCard isDark={isDark} prefillMessage={prefillMessage} />
+              <ContactFormCard isDark={isDark} prefillMessage={prefillMessage} onNavigate={onNavigate} />
             </div>
           </div>
         </div>

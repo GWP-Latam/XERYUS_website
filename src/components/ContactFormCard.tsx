@@ -1,44 +1,59 @@
-import { useState } from 'react';
-import { Send, Check } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Send } from 'lucide-react';
 
 interface ContactFormCardProps {
   isDark: boolean;
   prefillMessage?: string;
+  onNavigate: (page: string, data?: Record<string, unknown>) => void;
 }
 
-export default function ContactFormCard({ isDark, prefillMessage }: ContactFormCardProps) {
-  const [submitted, setSubmitted] = useState(false);
+const HONEYPOT_FIELD = 'website_url';
+
+export default function ContactFormCard({ isDark, prefillMessage, onNavigate }: ContactFormCardProps) {
   const [form, setForm] = useState({
-    name: '', email: '', company: '', phone: '', challenge: '', message: prefillMessage || ''
+    name: '', email: '', company: '', phone: '', message: prefillMessage || ''
   });
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
+  const startedAt = useRef(Date.now());
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-  };
+    setSending(true);
+    setError(false);
 
-  if (submitted) {
-    return (
-      <div className={`p-12 border text-center ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-white'}`}>
-        <div className="w-16 h-16 mx-auto bg-[#fd3838]/10 flex items-center justify-center mb-6">
-          <Check size={28} className="text-[#fd3838]" />
-        </div>
-        <h3 className="text-2xl font-bold mb-4">Mensaje enviado</h3>
-        <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          Gracias por contactarnos. Nuestro equipo te responderá en menos de 24 horas hábiles.
-        </p>
-        <button
-          onClick={() => { setSubmitted(false); setForm({ name: '', email: '', company: '', phone: '', challenge: '', message: '' }); }}
-          className="mt-8 text-xs tracking-wider uppercase text-[#fd3838] font-semibold"
-        >
-          Enviar otro mensaje
-        </button>
-      </div>
-    );
-  }
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          [HONEYPOT_FIELD]: honeypotRef.current?.value || '',
+          formStartedAt: startedAt.current,
+        }),
+      });
+    } catch (err) {
+      console.error('Error enviando el formulario de contacto:', err);
+      setError(true);
+    }
+
+    onNavigate('gracias', { ...form });
+  };
 
   return (
     <form onSubmit={handleSubmit} className={`p-8 border ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-white'}`}>
+      {/* Honeypot anti-spam: invisible para personas, los bots sí lo rellenan */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name={HONEYPOT_FIELD}
+        tabIndex={-1}
+        autoComplete="off"
+        className="absolute w-0 h-0 opacity-0 pointer-events-none"
+        aria-hidden="true"
+      />
+
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Nombre completo *</label>
@@ -78,29 +93,6 @@ export default function ContactFormCard({ isDark, prefillMessage }: ContactFormC
         </div>
       </div>
       <div className="mt-6">
-        <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>¿Qué reto deseas resolver?</label>
-        <select
-          value={form.challenge}
-          onChange={e => setForm({ ...form, challenge: e.target.value })}
-          style={{ colorScheme: isDark ? 'dark' : 'light' }}
-          className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors
-          ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
-        >
-          <option value="" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Selecciona una opción</option>
-          <option value="expandir" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Expandir mi empresa</option>
-          <option value="sucursales" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Abrir nuevas sucursales</option>
-          <option value="ventas" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Incrementar ventas</option>
-          <option value="clientes" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Entender a mis clientes</option>
-          <option value="producto" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Lanzar un nuevo producto</option>
-          <option value="marca" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Fortalecer mi marca</option>
-          <option value="competencia" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Analizar a mi competencia</option>
-          <option value="experiencia" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Mejorar la experiencia del cliente</option>
-          <option value="inversion" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Validar una inversión</option>
-          <option value="ubicacion" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Seleccionar la mejor ubicación</option>
-          <option value="otro" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Otro</option>
-        </select>
-      </div>
-      <div className="mt-6">
         <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Mensaje</label>
         <textarea
           rows={5} value={form.message}
@@ -109,11 +101,17 @@ export default function ContactFormCard({ isDark, prefillMessage }: ContactFormC
           ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
         />
       </div>
+      {error && (
+        <p className="mt-4 text-xs text-[#fd3838]">
+          Hubo un problema al enviar tu mensaje, pero seguimos adelante — si no te contactamos pronto, escríbenos directo a contacto@xeryusinvest.com.
+        </p>
+      )}
       <button
         type="submit"
-        className="group flex items-center gap-2 bg-[#fd3838] text-white px-8 py-4 mt-6 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] active:scale-95"
+        disabled={sending}
+        className="group flex items-center gap-2 bg-[#fd3838] text-white px-8 py-4 mt-6 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] active:scale-95 disabled:opacity-60 disabled:cursor-wait"
       >
-        Enviar mensaje
+        {sending ? 'Enviando…' : 'Enviar mensaje'}
         <Send size={14} className="group-hover:translate-x-1 transition-transform" />
       </button>
     </form>
