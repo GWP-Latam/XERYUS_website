@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import ContactModal from '@/components/ContactModal';
 import {
-  Calendar, Clock, ArrowLeft, ArrowRight, Send, Check, BarChart3,
+  Calendar, Clock, ArrowLeft, ArrowRight, Send, BarChart3,
   ClipboardCheck, RefreshCw, Building2, Users, Crosshair,
 } from 'lucide-react';
 
@@ -9,52 +10,76 @@ interface PageProps {
   onNavigate: (page: string, data?: Record<string, unknown>) => void;
 }
 
+type OpenContact = (message: string) => void;
+
 // ── Interactivo 1: gráfica comparativa ──────────────────────────────────────
 
-function LaunchSuccessChart({ isDark }: { isDark: boolean }) {
-  const [hovered, setHovered] = useState<number | null>(null);
-  const bars = [
-    { label: 'Empresas con mejores prácticas de desarrollo de producto', value: 76 },
-    { label: 'Resto de las empresas', value: 51 },
-  ];
+type Segment = 'con' | 'sin';
+
+const SEGMENT_DATA: Record<Segment, { label: string; value: number; note: string }> = {
+  con: {
+    label: 'Con estudio de mercado',
+    value: 76,
+    note: 'Validar el concepto antes de lanzar se asocia con una tasa de éxito 30–40% mayor, según Nielsen.',
+  },
+  sin: {
+    label: 'Sin estudio de mercado',
+    value: 51,
+    note: '8 de cada 10 productos nuevos fracasan en el mercado cuando se lanzan sin validación previa suficiente (Nielsen, Breakthrough Innovation Report).',
+  },
+};
+
+function MarketResearchImpactChart({ isDark }: { isDark: boolean }) {
+  const [segment, setSegment] = useState<Segment>('con');
+  const active = SEGMENT_DATA[segment];
 
   return (
     <div className={`p-6 md:p-8 border my-10 not-prose ${isDark ? 'border-white/10 bg-gray-950' : 'border-black/10 bg-gray-50'}`}>
-      <div className="flex items-center gap-2 mb-1">
+      <div className="flex items-center gap-2 mb-4">
         <BarChart3 size={15} className="text-[#fd3838]" />
-        <span className="text-xs tracking-[0.2em] uppercase font-semibold text-[#fd3838]">Dato interactivo</span>
+        <h4 className={`text-base font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
+          Éxito en lanzamiento de producto
+        </h4>
       </div>
-      <h4 className={`text-base font-semibold mt-3 mb-8 ${isDark ? 'text-white' : 'text-black'}`}>
-        Tasa de éxito en lanzamiento de nuevos productos
-      </h4>
 
-      <div className="flex items-end gap-6 sm:gap-10 h-48">
-        {bars.map((b, i) => (
-          <div
-            key={i}
-            className="flex-1 flex flex-col items-center justify-end h-full cursor-default"
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
+      <div className={`inline-flex mb-8 p-1 border ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+        {(['con', 'sin'] as Segment[]).map(key => (
+          <button
+            key={key}
+            onClick={() => setSegment(key)}
+            className={`px-4 py-2 text-xs font-semibold tracking-wider uppercase transition-all duration-300
+              ${segment === key
+                ? 'bg-[#fd3838] text-white'
+                : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'
+              }`}
           >
-            <span className={`mb-2 text-lg font-bold transition-opacity duration-200 ${isDark ? 'text-white' : 'text-black'} ${hovered === null || hovered === i ? 'opacity-100' : 'opacity-40'}`}>
-              {b.value}%
-            </span>
-            <div
-              className="w-full max-w-[140px] bg-[#fd3838] transition-all duration-300"
-              style={{ height: `${b.value}%`, opacity: hovered === null || hovered === i ? 1 : 0.35 }}
-            />
-          </div>
+            {SEGMENT_DATA[key].label}
+          </button>
         ))}
       </div>
 
-      <div className="flex gap-6 sm:gap-10 mt-4">
-        {bars.map((b, i) => (
-          <p key={i} className={`flex-1 text-xs text-center leading-snug ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{b.label}</p>
-        ))}
+      <div className="flex items-end gap-6">
+        <div className="w-28 sm:w-36 h-40 flex items-end">
+          <div
+            key={segment}
+            className="w-full bg-[#fd3838] transition-[height] duration-500 ease-out animate-fade-in-up"
+            style={{ height: `${active.value}%` }}
+          />
+        </div>
+        <div>
+          <div className={`text-5xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{active.value}%</div>
+          <p className={`mt-1 text-xs tracking-wider uppercase ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+            de proyectos que alcanzan sus metas de venta
+          </p>
+        </div>
       </div>
+
+      <p key={`note-${segment}`} className={`mt-6 text-sm leading-relaxed animate-fade-in ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+        {active.note}
+      </p>
 
       <p className={`mt-6 pt-4 border-t text-xs leading-relaxed ${isDark ? 'border-white/5 text-gray-600' : 'border-black/5 text-gray-400'}`}>
-        Fuente: Knudsen, E. et al. (2023), "Best practices in new product development and innovation: results from PDMA's 2021 global survey", <em>Journal of Product Innovation Management</em>. Estudio con 651 empresas en 37 países; la diferencia refleja la brecha entre quienes siguen prácticas rigurosas de desarrollo de producto —investigación de mercado incluida— y el resto.
+        Fuentes: Knudsen, E. et al. (2023), "Best practices in new product development and innovation: results from PDMA's 2021 global survey", <em>Journal of Product Innovation Management</em> (651 empresas en 37 países) · Nielsen, Breakthrough Innovation Report.
       </p>
     </div>
   );
@@ -125,15 +150,14 @@ const QUIZ_RESULTS: Record<ResultKey, { title: string; desc: string; icon: typeo
   },
 };
 
-function DiagnosticQuiz({ isDark, onNavigate }: { isDark: boolean; onNavigate: PageProps['onNavigate'] }) {
+function DiagnosticQuiz({ isDark, onOpenContact }: { isDark: boolean; onOpenContact: OpenContact }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<ResultKey[]>([]);
 
   const finished = step >= QUIZ_QUESTIONS.length;
 
   const choose = (key: ResultKey) => {
-    const next = [...answers, key];
-    setAnswers(next);
+    setAnswers([...answers, key]);
     setStep(step + 1);
   };
 
@@ -196,7 +220,7 @@ function DiagnosticQuiz({ isDark, onNavigate }: { isDark: boolean; onNavigate: P
           <p className={`text-sm leading-relaxed mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{QUIZ_RESULTS[resultKey].desc}</p>
           <div className="flex flex-wrap items-center gap-4">
             <button
-              onClick={() => onNavigate('contacto', { prefillMessage: `Me interesa un ${QUIZ_RESULTS[resultKey].title.toLowerCase()}.` })}
+              onClick={() => onOpenContact(`Me interesa un ${QUIZ_RESULTS[resultKey].title.toLowerCase()}.`)}
               className="group flex items-center gap-2 bg-[#fd3838] text-white px-6 py-3 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] active:scale-95"
             >
               Agenda tu diagnóstico gratuito
@@ -216,61 +240,33 @@ function DiagnosticQuiz({ isDark, onNavigate }: { isDark: boolean; onNavigate: P
   );
 }
 
-// ── Interactivo 3: formulario corto de diagnóstico ──────────────────────────
+// ── Interactivo 3: pregunta corta de diagnóstico ────────────────────────────
 
-function QuickDiagnosticForm({ isDark, onNavigate }: { isDark: boolean; onNavigate: PageProps['onNavigate'] }) {
+function QuickDiagnosticForm({ isDark, onOpenContact }: { isDark: boolean; onOpenContact: OpenContact }) {
   const [decision, setDecision] = useState('');
-  const [company, setCompany] = useState('');
-  const [email, setEmail] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const parts = [decision, company && `Empresa: ${company}`, email && `Correo: ${email}`].filter(Boolean);
-    onNavigate('contacto', { prefillMessage: parts.join(' — ') });
+    onOpenContact(decision);
   };
 
   return (
     <form onSubmit={handleSubmit} className={`p-6 md:p-8 border my-10 not-prose ${isDark ? 'border-white/10 bg-gray-950' : 'border-black/10 bg-gray-50'}`}>
       <div className="flex items-center gap-2 mb-1">
-        <Check size={15} className="text-[#fd3838]" />
+        <Send size={15} className="text-[#fd3838]" />
         <span className="text-xs tracking-[0.2em] uppercase font-semibold text-[#fd3838]">El primer paso es gratuito</span>
       </div>
       <h4 className={`text-base font-semibold mt-3 mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
         Cuéntanos qué decisión estás por tomar
       </h4>
 
-      <div className="space-y-4">
-        <div>
-          <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>¿Qué decisión estás por tomar? *</label>
-          <input
-            required type="text" value={decision}
-            onChange={e => setDecision(e.target.value)}
-            placeholder="Ej. Abrir una sucursal en Monterrey"
-            className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors text-sm
-              ${isDark ? 'border-white/10 text-white placeholder:text-gray-600' : 'border-black/10 text-black placeholder:text-gray-400'}`}
-          />
-        </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Nombre de tu empresa</label>
-            <input
-              type="text" value={company}
-              onChange={e => setCompany(e.target.value)}
-              className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors text-sm
-                ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
-            />
-          </div>
-          <div>
-            <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Correo</label>
-            <input
-              type="email" value={email}
-              onChange={e => setEmail(e.target.value)}
-              className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors text-sm
-                ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
-            />
-          </div>
-        </div>
-      </div>
+      <input
+        required type="text" value={decision}
+        onChange={e => setDecision(e.target.value)}
+        placeholder="Ej. Abrir una sucursal en Monterrey"
+        className={`w-full p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors text-sm
+          ${isDark ? 'border-white/10 text-white placeholder:text-gray-600' : 'border-black/10 text-black placeholder:text-gray-400'}`}
+      />
 
       <button
         type="submit"
@@ -287,6 +283,7 @@ function QuickDiagnosticForm({ isDark, onNavigate }: { isDark: boolean; onNaviga
 
 export default function ArticuloInvestigacionMercados({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
+  const [contactPrefill, setContactPrefill] = useState<string | null>(null);
   const textMuted = isDark ? 'text-gray-400' : 'text-gray-600';
   const textBody = `text-lg leading-relaxed mb-6 ${textMuted}`;
   const h2 = `section-title text-2xl md:text-3xl mt-14 mb-5 ${isDark ? 'text-white' : 'text-black'}`;
@@ -321,7 +318,7 @@ export default function ArticuloInvestigacionMercados({ onNavigate }: PageProps)
             Esa definición importa porque corrige un malentendido común: investigación de mercados no es sinónimo de encuesta, y tampoco es una opinión mejor informada. Es un método.
           </p>
 
-          <LaunchSuccessChart isDark={isDark} />
+          <MarketResearchImpactChart isDark={isDark} />
 
           <h2 className={h2}>Por qué la intuición no basta, aunque haya funcionado antes</h2>
           <p className={textBody}>
@@ -342,7 +339,7 @@ export default function ArticuloInvestigacionMercados({ onNavigate }: PageProps)
             <strong className={isDark ? 'text-white' : 'text-black'}>Investigación cualitativa.</strong> Responde el "por qué" detrás del número. Entrevistas a profundidad, grupos de enfoque, mystery shopping o estudios de neuromarketing revelan las motivaciones, fricciones y percepciones que ninguna encuesta cerrada captura del todo. Un estudio cuantitativo puede decir que el 40% de los clientes de una sucursal se va sin comprar; solo uno cualitativo explica si es por el precio, por el servicio o por algo tan simple como no encontrar el producto en el anaquel.
           </p>
 
-          <DiagnosticQuiz isDark={isDark} onNavigate={onNavigate} />
+          <DiagnosticQuiz isDark={isDark} onOpenContact={setContactPrefill} />
 
           <h2 className={h2}>Lo que la investigación de mercados puede responder en la práctica</h2>
           <p className={textBody}>
@@ -375,13 +372,17 @@ export default function ArticuloInvestigacionMercados({ onNavigate }: PageProps)
             Antes de decidir qué metodología usar, hay que tener claridad sobre qué decisión de negocio está en juego. Ese diagnóstico inicial (qué se necesita saber y por qué) es, de hecho, el primer paso de cualquier estudio serio, y es gratuito.
           </p>
 
-          <QuickDiagnosticForm isDark={isDark} onNavigate={onNavigate} />
+          <QuickDiagnosticForm isDark={isDark} onOpenContact={setContactPrefill} />
 
           <p className={textBody}>
             Si tu empresa está por tomar una decisión que depende de cómo va a reaccionar el mercado, vale más resolver esa pregunta con datos que descubrirlo después, cuando ya se invirtió el presupuesto.
           </p>
         </div>
       </article>
+
+      {contactPrefill !== null && (
+        <ContactModal isDark={isDark} prefillMessage={contactPrefill} onClose={() => setContactPrefill(null)} />
+      )}
     </div>
   );
 }
