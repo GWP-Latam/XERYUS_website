@@ -143,21 +143,22 @@ export default function Contacto() {
                     <select
                       value={form.challenge}
                       onChange={e => setForm({ ...form, challenge: e.target.value })}
+                      style={{ colorScheme: isDark ? 'dark' : 'light' }}
                       className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors
                       ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
                     >
-                      <option value="">Selecciona una opción</option>
-                      <option value="expandir">Expandir mi empresa</option>
-                      <option value="sucursales">Abrir nuevas sucursales</option>
-                      <option value="ventas">Incrementar ventas</option>
-                      <option value="clientes">Entender a mis clientes</option>
-                      <option value="producto">Lanzar un nuevo producto</option>
-                      <option value="marca">Fortalecer mi marca</option>
-                      <option value="competencia">Analizar a mi competencia</option>
-                      <option value="experiencia">Mejorar la experiencia del cliente</option>
-                      <option value="inversion">Validar una inversión</option>
-                      <option value="ubicacion">Seleccionar la mejor ubicación</option>
-                      <option value="otro">Otro</option>
+                      <option value="" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Selecciona una opción</option>
+                      <option value="expandir" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Expandir mi empresa</option>
+                      <option value="sucursales" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Abrir nuevas sucursales</option>
+                      <option value="ventas" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Incrementar ventas</option>
+                      <option value="clientes" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Entender a mis clientes</option>
+                      <option value="producto" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Lanzar un nuevo producto</option>
+                      <option value="marca" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Fortalecer mi marca</option>
+                      <option value="competencia" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Analizar a mi competencia</option>
+                      <option value="experiencia" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Mejorar la experiencia del cliente</option>
+                      <option value="inversion" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Validar una inversión</option>
+                      <option value="ubicacion" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Seleccionar la mejor ubicación</option>
+                      <option value="otro" className={isDark ? 'bg-black text-white' : 'bg-white text-black'}>Otro</option>
                     </select>
                   </div>
                   <div className="mt-6">

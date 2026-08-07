@@ -21,7 +21,7 @@ const navColumns = [
     title: 'Empresa',
     links: [
       { label: 'Nosotros', page: 'nosotros' },
-      { label: 'Casos de éxito', page: 'casos' },
+      { label: 'Casos de éxito', page: 'portafolio' },
       { label: 'Blog', page: 'blog' },
       { label: 'Contacto', page: 'contacto' },
     ],

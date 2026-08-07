@@ -118,7 +118,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => onNavigate('casos')}
+            onClick={() => onNavigate('portafolio')}
             className={`flex items-center justify-center gap-2 border px-8 py-4 text-xs font-semibold tracking-wider uppercase transition-all duration-300 active:scale-95
               ${isDark ? 'border-white/20 text-white hover:bg-white hover:text-black' : 'border-black/20 text-black hover:bg-black hover:text-white'}`}
           >

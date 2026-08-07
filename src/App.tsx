@@ -14,6 +14,7 @@ import SuccessCases from '@/components/home/SuccessCases';
 import Testimonials from '@/components/home/Testimonials';
 import Resources from '@/components/home/Resources';
 import FinalCTA from '@/components/home/FinalCTA';
+import Newsletter from '@/components/home/Newsletter';
 import Nosotros from '@/components/pages/Nosotros';
 import Soluciones from '@/components/pages/Soluciones';
 import Factibilidad from '@/components/pages/Factibilidad';
@@ -23,7 +24,6 @@ import IndustriaDetail from '@/components/pages/IndustriaDetail';
 import SolucionExpansion from '@/components/pages/SolucionExpansion';
 import SolucionCompetencia from '@/components/pages/SolucionCompetencia';
 import Blog from '@/components/pages/Blog';
-import Casos from '@/components/pages/Casos';
 import Portafolio from '@/components/pages/Portafolio';
 import Contacto from '@/components/pages/Contacto';
 
@@ -62,8 +62,9 @@ function App() {
       case 'solucion-expansion': return <SolucionExpansion onNavigate={handleNavigate} />;
       case 'solucion-competencia': return <SolucionCompetencia onNavigate={handleNavigate} />;
       case 'blog': return <Blog onNavigate={handleNavigate} />;
-      case 'casos': return <Casos onNavigate={handleNavigate} />;
-      case 'portafolio': return <Portafolio onNavigate={handleNavigate} />;
+      case 'casos':
+      case 'portafolio':
+        return <Portafolio onNavigate={handleNavigate} />;
       case 'contacto': return <Contacto />;
       default: return (
         <>
@@ -73,10 +74,11 @@ function App() {
           <Challenges onNavigate={handleNavigate} />
           <Differentiators />
           <HowWeWork />
-          <SuccessCases />
+          <SuccessCases onNavigate={handleNavigate} />
           <Testimonials />
           <Resources />
           <FinalCTA onNavigate={handleNavigate} />
+          <Newsletter />
         </>
       );
     }
