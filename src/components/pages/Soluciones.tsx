@@ -20,7 +20,7 @@ const solutions = [
   { icon: Users, title: 'Conocer al consumidor', desc: 'Profundizar en hábitos, motivaciones y necesidades de tu audiencia.', tag: 'Consumer Insights' },
   { icon: Shield, title: 'Evaluar una marca', desc: 'Medir el posicionamiento y salud de tu marca frente a la competencia.', tag: 'Brand Equity' },
   { icon: Package, title: 'Lanzar un producto', desc: 'Validar concepto, precio y propuesta antes de salir al mercado.', tag: 'Innovación' },
-  { icon: Crosshair, title: 'Analizar competencia', desc: 'Inteligencia competitiva para anticipar movimientos del mercado.', tag: 'Inteligencia' },
+  { icon: Crosshair, title: 'Analizar competencia', desc: 'Inteligencia competitiva para anticipar movimientos del mercado.', tag: 'Inteligencia', page: 'solucion-competencia' },
   { icon: Eye, title: 'Optimizar experiencia del cliente', desc: 'Diagnosticar puntos de fricción y oportunidades en cada contacto.', tag: 'CX' },
   { icon: DollarSign, title: 'Validar inversiones', desc: 'Reducir la incertidumbre antes de comprometer capital en un proyecto.', tag: 'Inversión' },
 ];

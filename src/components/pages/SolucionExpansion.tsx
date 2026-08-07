@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import { useInView } from '@/hooks/useAnimation';
 import {
   ArrowRight, Search, Users, Target, TrendingUp, MapPin, Building2,
   Store, BarChart3, Factory, ShoppingBag,
+  ClipboardList, Mic, Map, RefreshCw, UserSearch, Crosshair, LineChart,
 } from 'lucide-react';
 
 interface PageProps {
@@ -184,10 +186,22 @@ const content: Record<Audience, { label: string; points: { icon: typeof Search; 
   },
 };
 
+const methods = [
+  { icon: ClipboardList, name: 'Encuestas estructuradas', desc: 'Cuestionarios a tu consumidor o cliente potencial para medir intención de compra, hábitos y percepción en la zona.' },
+  { icon: Mic, name: 'Entrevistas a profundidad', desc: 'Conversaciones uno a uno con decisores, clientes o expertos locales para entender el porqué detrás del número.' },
+  { icon: Users, name: 'Focus groups', desc: 'Sesiones grupales para poner a prueba conceptos, ubicaciones o propuestas de valor antes de invertir.' },
+  { icon: Map, name: 'Geomarketing', desc: 'Cruce de datos geográficos, tráfico peatonal y densidad poblacional para encontrar la zona con mayor potencial.' },
+  { icon: RefreshCw, name: 'Cruce de datos internos y externos', desc: 'Combinamos tus datos de ventas, CRM o punto de venta con fuentes externas (INEGI, cámaras, estudios sectoriales) para una lectura completa.' },
+  { icon: UserSearch, name: 'Mystery shopper y auditoría de zona', desc: 'Evaluación encubierta de la competencia y el entorno comercial en la zona que estás evaluando.' },
+  { icon: Crosshair, name: 'Análisis de competencia', desc: 'Mapeo de quién ya está en la zona, con qué oferta y qué tan fuerte es su posición.' },
+  { icon: LineChart, name: 'Modelos de proyección', desc: 'Proyectamos escenarios de demanda y retorno esperado según distintas variables de entrada.' },
+];
+
 export default function SolucionExpansion({ onNavigate }: PageProps) {
   const { isDark } = useTheme();
   const [audience, setAudience] = useState<Audience>('b2c');
   const active = content[audience];
+  const { ref: methodsRef, inView: methodsInView } = useInView(0.1);
 
   return (
     <div className={`pt-20 transition-colors duration-300 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
@@ -272,8 +286,48 @@ export default function SolucionExpansion({ onNavigate }: PageProps) {
         </div>
       </section>
 
+      {/* Cómo lo conseguimos */}
+      <section className="py-20 lg:py-28">
+        <div ref={methodsRef} className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <span className="section-label">Cómo lo conseguimos</span>
+            <h2 className="section-title text-3xl md:text-4xl mt-4 max-w-2xl mx-auto">
+              No hay una sola forma de hacerlo. Hay la forma correcta para tu empresa.
+            </h2>
+            <p className={`mt-6 text-lg max-w-2xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              Dependiendo de tu industria, tu presupuesto y qué tan rápido necesitas la respuesta, combinamos distintas herramientas. Desde algo tan directo como una encuesta, hasta cruces de datos más profundos.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {methods.map((m, i) => (
+              <div
+                key={m.name}
+                style={{ animationDelay: `${(i % 4) * 0.08}s` }}
+                className={`group p-6 border transition-all duration-500 hover:-translate-y-1 ${methodsInView ? 'animate-fade-in-up' : 'opacity-0'}
+                  ${isDark ? 'bg-gray-950 border-white/5 hover:border-[#fd3838]/30' : 'bg-gray-50 border-black/5 hover:shadow-xl'}`}
+              >
+                <div className="w-11 h-11 bg-[#fd3838]/10 flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-[#fd3838]">
+                  <m.icon size={18} className="text-[#fd3838] group-hover:text-white transition-colors duration-300" />
+                </div>
+                <h3 className="text-sm font-semibold mb-2">{m.name}</h3>
+                <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{m.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-4 justify-center flex-wrap mt-12">
+            <div className="red-line" />
+            <p className={`text-sm md:text-base font-medium text-center ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              Diseñamos la combinación exacta para tu reto, no un paquete cerrado.
+            </p>
+            <div className="red-line" />
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-20">
+      <section className={`py-20 border-t ${isDark ? 'border-white/5 bg-gray-950' : 'border-black/5 bg-gray-50'}`}>
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <h2 className="section-title text-3xl md:text-4xl mb-6">¿Listo para expandirte con datos, no con corazonadas?</h2>
           <p className={`mb-8 text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>

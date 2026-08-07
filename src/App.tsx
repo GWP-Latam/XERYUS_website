@@ -21,6 +21,7 @@ import Herramientas from '@/components/pages/Herramientas';
 import ToolDetail from '@/components/pages/ToolDetail';
 import IndustriaDetail from '@/components/pages/IndustriaDetail';
 import SolucionExpansion from '@/components/pages/SolucionExpansion';
+import SolucionCompetencia from '@/components/pages/SolucionCompetencia';
 import Blog from '@/components/pages/Blog';
 import Casos from '@/components/pages/Casos';
 import Portafolio from '@/components/pages/Portafolio';
@@ -59,6 +60,7 @@ function App() {
       case 'tool-detail': return <ToolDetail onNavigate={handleNavigate} toolId={pageData.toolId} />;
       case 'industria-detail': return <IndustriaDetail onNavigate={handleNavigate} industriaId={pageData.industriaId} />;
       case 'solucion-expansion': return <SolucionExpansion onNavigate={handleNavigate} />;
+      case 'solucion-competencia': return <SolucionCompetencia onNavigate={handleNavigate} />;
       case 'blog': return <Blog onNavigate={handleNavigate} />;
       case 'casos': return <Casos onNavigate={handleNavigate} />;
       case 'portafolio': return <Portafolio onNavigate={handleNavigate} />;
