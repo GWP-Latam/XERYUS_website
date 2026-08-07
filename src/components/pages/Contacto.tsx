@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { Mail, Phone, MapPin, Send, Check } from 'lucide-react';
 
-export default function Contacto() {
+interface ContactoProps {
+  prefillMessage?: string;
+}
+
+export default function Contacto({ prefillMessage }: ContactoProps) {
   const { isDark } = useTheme();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
-    name: '', email: '', company: '', phone: '', challenge: '', message: ''
+    name: '', email: '', company: '', phone: '', challenge: '', message: prefillMessage || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {

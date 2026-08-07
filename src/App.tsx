@@ -24,6 +24,7 @@ import IndustriaDetail from '@/components/pages/IndustriaDetail';
 import SolucionExpansion from '@/components/pages/SolucionExpansion';
 import SolucionCompetencia from '@/components/pages/SolucionCompetencia';
 import Blog from '@/components/pages/Blog';
+import ArticuloInvestigacionMercados from '@/components/pages/blog/ArticuloInvestigacionMercados';
 import Portafolio from '@/components/pages/Portafolio';
 import Contacto from '@/components/pages/Contacto';
 
@@ -33,7 +34,7 @@ function App() {
     const hash = window.location.hash.replace('#', '');
     return hash || 'home';
   });
-  const [pageData, setPageData] = useState<{ toolId?: string; industriaId?: string }>({});
+  const [pageData, setPageData] = useState<{ toolId?: string; industriaId?: string; prefillMessage?: string }>({});
 
   const handleNavigate = (newPage: string, data?: Record<string, unknown>) => {
     setPage(newPage);
@@ -62,10 +63,11 @@ function App() {
       case 'solucion-expansion': return <SolucionExpansion onNavigate={handleNavigate} />;
       case 'solucion-competencia': return <SolucionCompetencia onNavigate={handleNavigate} />;
       case 'blog': return <Blog onNavigate={handleNavigate} />;
+      case 'blog-investigacion-mercados': return <ArticuloInvestigacionMercados onNavigate={handleNavigate} />;
       case 'casos':
       case 'portafolio':
         return <Portafolio onNavigate={handleNavigate} />;
-      case 'contacto': return <Contacto />;
+      case 'contacto': return <Contacto prefillMessage={pageData.prefillMessage} />;
       default: return (
         <>
           <Hero onNavigate={handleNavigate} />

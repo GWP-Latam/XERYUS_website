@@ -6,14 +6,14 @@ interface FooterProps {
 }
 
 const seoConcepts = [
-  '¿Qué es la investigación de mercados?',
-  '¿Qué son las encuestas?',
-  '¿Qué es un focus group?',
-  '¿Qué es un mystery shopper?',
-  '¿Qué es la investigación cualitativa?',
-  '¿Qué es la investigación cuantitativa?',
-  '¿Qué es un estudio de mercado?',
-  '¿Qué es el geomarketing?',
+  { label: '¿Qué es la investigación de mercados?', page: 'blog-investigacion-mercados' },
+  { label: '¿Qué son las encuestas?' },
+  { label: '¿Qué es un focus group?' },
+  { label: '¿Qué es un mystery shopper?' },
+  { label: '¿Qué es la investigación cualitativa?' },
+  { label: '¿Qué es la investigación cuantitativa?' },
+  { label: '¿Qué es un estudio de mercado?' },
+  { label: '¿Qué es el geomarketing?' },
 ];
 
 const navColumns = [
@@ -98,9 +98,11 @@ export default function Footer({ onNavigate }: FooterProps) {
                 {seoConcepts.map((concept, i) => (
                   <li key={i}>
                     <button
-                      className={`text-left text-sm transition-colors duration-200 ${isDark ? 'text-gray-500 hover:text-[#fd3838]' : 'text-gray-500 hover:text-[#fd3838]'}`}
+                      onClick={() => concept.page && onNavigate(concept.page)}
+                      disabled={!concept.page}
+                      className={`text-left text-sm transition-colors duration-200 ${concept.page ? '' : 'cursor-default'} ${isDark ? 'text-gray-500 hover:text-[#fd3838]' : 'text-gray-500 hover:text-[#fd3838]'}`}
                     >
-                      {concept}
+                      {concept.label}
                     </button>
                   </li>
                 ))}

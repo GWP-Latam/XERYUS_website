@@ -10,6 +10,7 @@ interface PageProps {
 const categories = ['Todos', 'Investigación de mercados', 'Metodología', 'Geomarketing', 'Inteligencia competitiva', 'Marketing', 'Inmobiliario', 'Experiencia del cliente', 'Tendencias'];
 
 const posts = [
+  { title: '¿Qué es la investigación de mercados?', category: 'Investigación de mercados', date: '7 Ago 2026', read: '6 min', excerpt: 'Por qué la intuición no basta, los dos tipos de investigación que existen y cómo saber cuál necesita tu proyecto.', page: 'blog-investigacion-mercados' },
   { title: 'El futuro de la investigación de mercados en la era de la IA', category: 'Tendencias', date: '15 Ene 2025', read: '8 min', excerpt: 'Cómo la inteligencia artificial está transformando el análisis de datos y la toma de decisiones.' },
   { title: 'Geomarketing: la ciencia detrás de la ubicación perfecta', category: 'Geomarketing', date: '10 Ene 2025', read: '6 min', excerpt: 'Por qué el análisis territorial es clave para decisiones de expansión.' },
   { title: 'Focus groups en el mundo digital: retos y oportunidades', category: 'Metodología', date: '5 Ene 2025', read: '10 min', excerpt: 'Cómo adaptar la investigación cualitativa a entornos virtuales sin perder profundidad.' },
@@ -71,7 +72,10 @@ export default function Blog({ onNavigate }: PageProps) {
       {featured && (
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className={`group cursor-pointer border ${isDark ? 'border-white/5 bg-gray-950 hover:border-[#fd3838]/30' : 'border-black/5 bg-white hover:shadow-xl'} transition-all duration-300`}>
+            <div
+              onClick={() => featured.page && onNavigate(featured.page)}
+              className={`group border ${featured.page ? 'cursor-pointer' : 'cursor-default'} ${isDark ? 'border-white/5 bg-gray-950 hover:border-[#fd3838]/30' : 'border-black/5 bg-white hover:shadow-xl'} transition-all duration-300`}
+            >
               <div className="grid lg:grid-cols-2 gap-0">
                 <div className={`relative aspect-video lg:aspect-auto ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -101,7 +105,8 @@ export default function Blog({ onNavigate }: PageProps) {
             {rest.map((post, i) => (
               <div
                 key={i}
-                className={`group cursor-pointer border transition-all duration-500 ${inView ? 'animate-fade-in-up' : 'opacity-0'}
+                onClick={() => post.page && onNavigate(post.page)}
+                className={`group border transition-all duration-500 ${post.page ? 'cursor-pointer' : 'cursor-default'} ${inView ? 'animate-fade-in-up' : 'opacity-0'}
                   ${isDark ? 'bg-gray-950 border-white/5 hover:border-[#fd3838]/30' : 'bg-white border-black/5 hover:shadow-xl'}`}
                 style={{ animationDelay: `${(i % 3) * 0.1}s` }}
               >
