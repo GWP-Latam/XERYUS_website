@@ -131,7 +131,7 @@ export default function Testimonials() {
 
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-start">
           {/* Left - video carousel (independiente) */}
-          <div>
+          <div className="min-w-0">
             <TestimonialVideo url={activeVideoData.videoUrl} client={activeVideoData.client} logo={activeVideoData.logo} />
             <div className="flex items-center gap-4 mt-6">
               <button onClick={prevVideo} aria-label="Video anterior" className={`p-2 border transition-colors duration-200
@@ -156,7 +156,7 @@ export default function Testimonials() {
           </div>
 
           {/* Right - quote carousel (independiente) */}
-          <div className="relative">
+          <div className="relative min-w-0">
             <Quote size={40} className={`mb-6 ${isDark ? 'text-white/10' : 'text-black/10'}`} />
 
             <div className="overflow-hidden">

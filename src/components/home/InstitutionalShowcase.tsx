@@ -115,7 +115,7 @@ export default function InstitutionalShowcase() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
           {/* Left - Institutional video, near half the screen */}
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-3 mb-6">
               <div className="red-line" />
               <p className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -178,7 +178,7 @@ export default function InstitutionalShowcase() {
           </div>
 
           {/* Right - Double marquee carousel */}
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-3 mb-6">
               <div className="red-line" />
               <p className={`text-xs tracking-[0.3em] uppercase font-semibold ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
