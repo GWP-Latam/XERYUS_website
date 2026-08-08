@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
 import { isSpamSubmission } from './_antiSpam.js';
+import { isCorporateEmail } from './_freeEmail.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -17,6 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!name || !email) {
     return res.status(400).json({ error: 'Faltan campos requeridos' });
+  }
+
+  if (!isCorporateEmail(email)) {
+    return res.status(400).json({ error: 'Ingresa un correo corporativo, no de un proveedor gratuito' });
   }
 
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_TO } = process.env;

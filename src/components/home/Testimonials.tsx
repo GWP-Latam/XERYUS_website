@@ -169,9 +169,9 @@ function TestimonialVideo({ url, client, logo }: { url: string; client: string; 
         )}
       </button>
 
-      {/* Barra de controles */}
+      {/* Barra de controles: solo visible durante la reproducción (al hacer hover), nunca sobre la portada */}
       <div
-        className={`absolute bottom-0 left-0 right-0 px-3 pb-2 pt-8 bg-gradient-to-t from-black/85 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+        className={`absolute bottom-0 left-0 right-0 px-3 pb-2 pt-8 bg-gradient-to-t from-black/85 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={e => e.stopPropagation()}
       >
         <div onClick={handleSeek} className="h-1 w-full rounded-full bg-white/20 cursor-pointer mb-2.5">

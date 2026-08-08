@@ -151,7 +151,7 @@ export default function InstitutionalShowcase() {
               )}
 
               <div
-                className={`absolute bottom-0 left-0 right-0 px-3 md:px-4 pb-2 md:pb-3 pt-6 md:pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+                className={`absolute bottom-0 left-0 right-0 px-3 md:px-4 pb-2 md:pb-3 pt-6 md:pt-8 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-0 pointer-events-none'}`}
               >
                 <div onClick={handleSeek} className="h-1 w-full rounded-full bg-white/20 cursor-pointer mb-2 md:mb-3">
                   <div

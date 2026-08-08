@@ -1,5 +1,7 @@
 import { useTheme } from '@/context/ThemeContext';
-import { Linkedin, Instagram, Facebook, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Linkedin, Instagram, Facebook, Youtube, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
+
+const WHATSAPP_URL = 'https://wa.me/523313857143';
 
 interface FooterProps {
   onNavigate: (page: string) => void;
@@ -126,6 +128,16 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>+52 1 33 1385 7143</span>
               </div>
             </div>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 text-sm font-semibold transition-colors duration-200 hover:bg-[#1ebe5a]"
+            >
+              <MessageCircle size={16} className="fill-white/20" />
+              WhatsApp
+            </a>
           </div>
 
           {/* Bottom bar */}

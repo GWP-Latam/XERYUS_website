@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Send } from 'lucide-react';
+import { isCorporateEmail } from '@/lib/freeEmailDomains';
 
 interface ContactFormCardProps {
   isDark: boolean;
@@ -15,11 +16,19 @@ export default function ContactFormCard({ isDark, prefillMessage, onNavigate }: 
   });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const startedAt = useRef(Date.now());
   const honeypotRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isCorporateEmail(form.email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+
     setSending(true);
     setError(false);
 
@@ -68,10 +77,13 @@ export default function ContactFormCard({ isDark, prefillMessage, onNavigate }: 
           <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Email corporativo *</label>
           <input
             required type="email" value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={e => { setForm({ ...form, email: e.target.value }); setEmailError(false); }}
             className={`w-full mt-2 p-3 border bg-transparent focus:outline-none focus:border-[#fd3838] transition-colors
-            ${isDark ? 'border-white/10 text-white' : 'border-black/10 text-black'}`}
+            ${emailError ? 'border-[#fd3838]' : isDark ? 'border-white/10' : 'border-black/10'} ${isDark ? 'text-white' : 'text-black'}`}
           />
+          {emailError && (
+            <p className="mt-2 text-xs text-[#fd3838]">Usa tu correo corporativo, no aceptamos correos de proveedores gratuitos (Gmail, Hotmail, Outlook, etc.).</p>
+          )}
         </div>
         <div>
           <label className={`text-xs tracking-wide uppercase ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Empresa</label>
