@@ -1,0 +1,37 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="#ffffff"/>
+
+  <!-- Degradado sutil izquierda -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f9f9f9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+
+  <!-- Acento rojo sutil arriba -->
+  <rect width="1200" height="8" fill="#fd3838"/>
+
+  <!-- Logo (simplificado: círculo + "X") -->
+  <g transform="translate(150, 200)">
+    <circle cx="80" cy="80" r="70" fill="none" stroke="#fd3838" stroke-width="3"/>
+    <circle cx="80" cy="80" r="60" fill="none" stroke="#fd3838" stroke-width="2" opacity="0.5"/>
+    <text x="80" y="100" font-family="Montserrat, sans-serif" font-size="80" font-weight="bold" text-anchor="middle" fill="#fd3838">X</text>
+  </g>
+
+  <!-- Textos -->
+  <text x="600" y="220" font-family="Montserrat, sans-serif" font-size="72" font-weight="bold" text-anchor="middle" fill="#000000">XERYUS</text>
+
+  <text x="600" y="310" font-family="Poppins, sans-serif" font-size="42" text-anchor="middle" fill="#333333">Inteligencia de Mercados</text>
+  <text x="600" y="360" font-family="Poppins, sans-serif" font-size="42" text-anchor="middle" fill="#333333">e Investigación Estratégica</text>
+
+  <!-- Tagline -->
+  <text x="600" y="450" font-family="Poppins, sans-serif" font-size="28" text-anchor="middle" fill="#666666" font-style="italic">Transformamos datos en decisiones</text>
+
+  <!-- Footer info -->
+  <line x1="150" y1="520" x2="1050" y2="520" stroke="#fd3838" stroke-width="2" opacity="0.3"/>
+  <text x="150" y="580" font-family="Poppins, sans-serif" font-size="22" fill="#999999">www.xeryus.com</text>
+  <text x="1050" y="580" font-family="Poppins, sans-serif" font-size="22" fill="#999999" text-anchor="end">Guadalajara · Austin · París</text>
+</svg>
