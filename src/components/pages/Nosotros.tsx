@@ -263,10 +263,10 @@ export default function Nosotros({ onNavigate }: PageProps) {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <StatCounter value={500} suffix="+" label="Proyectos" isDark={isDark} />
-            <StatCounter value={200} suffix="+" label="Clientes" isDark={isDark} />
-            <StatCounter value={35} suffix="+" label="Años" isDark={isDark} />
-            <StatCounter value={3} suffix="" label="Países" isDark={isDark} />
+            <StatCounter value={3} suffix="+" label="Sedes Internacionales" isDark={isDark} />
+            <StatCounter value={1000} suffix="+" label="Proyectos Realizados" isDark={isDark} />
+            <StatCounter value={200} suffix="+" label="Clientes Atendidos" isDark={isDark} />
+            <StatCounter value={30} suffix="+" label="Años de Experiencia" isDark={isDark} />
           </div>
         </div>
       </section>

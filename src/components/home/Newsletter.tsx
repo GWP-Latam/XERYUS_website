@@ -19,8 +19,8 @@ export default function Newsletter() {
         <div className="w-14 h-14 mx-auto bg-[#fd3838]/10 flex items-center justify-center mb-6">
           <Mail size={22} className="text-[#fd3838]" />
         </div>
-        <h2 className="section-title text-2xl md:text-3xl mb-4">
-          Insights de mercado, directo a tu correo
+        <h2 className={`section-title text-2xl md:text-3xl mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
+        Insights de mercado, directo a tu correo
         </h2>
         <p className={`text-base leading-relaxed mb-8 max-w-lg mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           Suscríbete a nuestro newsletter y recibe análisis, tendencias y casos de estudio de investigación de mercados. Sin spam.
