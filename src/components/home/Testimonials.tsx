@@ -4,8 +4,8 @@ import { Star, Quote, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-reac
 
 const testimonials = [
   {
-    name: 'Ricardo Fernández',
-    role: 'Gerente de Operaciones',
+    name: 'Miguel Tapia',
+    role: 'Gerente de Marketing',
     rating: 5,
     text: 'Desde el primer contacto sentí la seriedad con la que trabajan. Nos entregaron resultados claros y accionables en el tiempo que prometieron, sin rodeos ni sorpresas.',
     videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146248/PROSIC_1_huoyj3.mp4',
@@ -13,8 +13,8 @@ const testimonials = [
     logo: '',
   },
   {
-    name: 'Daniela Solís',
-    role: 'Coordinadora Académica',
+    name: 'Aida Ávila',
+    role: 'Especialista en Evaluación y Análisis',
     rating: 5,
     text: 'La atención fue impecable de principio a fin. Se notó la formalidad del equipo y la facilidad con la que adaptaron la metodología a nuestras necesidades específicas.',
     videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146255/ITESO_1_f4d7pc.mp4',
@@ -22,8 +22,8 @@ const testimonials = [
     logo: '/assets/clients/iteso.png',
   },
   {
-    name: 'Andrés Palomo',
-    role: 'Director Comercial',
+    name: 'Claudia Navarro',
+    role: 'Encargada de Finanzas',
     rating: 5,
     text: 'Lo que más valoro es la rapidez con la que trabajan sin perder rigor. Nos ayudaron a tomar una decisión importante con información sólida, no con suposiciones.',
     videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146252/Galo_1_u5mjg0.mp4',
@@ -31,8 +31,8 @@ const testimonials = [
     logo: '/assets/clients/chizychiz.png',
   },
   {
-    name: 'Mariana Ibarra',
-    role: 'Directora de Desarrollo',
+    name: 'Jayr Hernández',
+    role: 'Gerente de Marketing',
     rating: 5,
     text: 'Su asertividad al presentar los hallazgos y las recomendaciones fue justo lo que necesitábamos. Un equipo profesional, puntual y muy fácil de coordinar.',
     videoUrl: 'https://res.cloudinary.com/fx7hcjz4/video/upload/v1786146289/Tata_Vasco_1_fctlvk.mp4',
