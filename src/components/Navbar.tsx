@@ -5,6 +5,7 @@ import { useTheme } from '@/context/ThemeContext';
 interface NavbarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
+  onContactClick: () => void;
 }
 
 const navLinks = [
@@ -13,11 +14,11 @@ const navLinks = [
   {
     label: 'Soluciones', page: 'soluciones',
     children: [
-      { label: 'Expandir empresa', page: 'soluciones' },
+      { label: 'Expandir empresa', page: 'solucion-expansion' },
       { label: 'Incrementar ventas', page: 'soluciones' },
       { label: 'Conocer al consumidor', page: 'soluciones' },
       { label: 'Lanzar un producto', page: 'soluciones' },
-      { label: 'Analizar competencia', page: 'soluciones' },
+      { label: 'Analizar competencia', page: 'solucion-competencia' },
     ]
   },
   { label: 'Portafolio', page: 'portafolio' },
@@ -25,7 +26,7 @@ const navLinks = [
   { label: 'Blog', page: 'blog' },
 ];
 
-export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
+export default function Navbar({ currentPage, onNavigate, onContactClick }: NavbarProps) {
   const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,7 +100,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             </button>
 
             <button
-              onClick={() => onNavigate('contacto')}
+              onClick={onContactClick}
               className="hidden lg:flex items-center gap-2 bg-[#fd3838] text-white px-5 py-2.5 text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:bg-[#aa2121] hover:shadow-lg hover:shadow-red-900/20"
             >
               Contacto
@@ -129,7 +130,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             </button>
           ))}
           <button
-            onClick={() => { onNavigate('contacto'); setMobileOpen(false); }}
+            onClick={() => { onContactClick(); setMobileOpen(false); }}
             className="w-full mt-4 bg-[#fd3838] text-white py-3 text-sm font-semibold tracking-wider uppercase"
           >
             Contacto

@@ -28,8 +28,11 @@ import ArticuloInvestigacionMercados from '@/components/pages/blog/ArticuloInves
 import Portafolio from '@/components/pages/Portafolio';
 import Contacto from '@/components/pages/Contacto';
 import Gracias from '@/components/pages/Gracias';
+import ContactModal from '@/components/ContactModal';
+import { useTheme } from '@/context/ThemeContext';
 
 function App() {
+  const { isDark } = useTheme();
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState<string>(() => {
     const hash = window.location.hash.replace('#', '');
@@ -45,12 +48,21 @@ function App() {
     phone?: string;
     message?: string;
   }>({});
+  const [contactModalOpen, setContactModalOpen] = useState(false);
 
   const handleNavigate = (newPage: string, data?: Record<string, unknown>) => {
     setPage(newPage);
     setPageData(data || {});
     window.location.hash = newPage;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleContactClick = () => {
+    if (page === 'home') {
+      handleNavigate('contacto');
+    } else {
+      setContactModalOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -102,9 +114,12 @@ function App() {
       <CustomCursor />
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
       <div className="min-h-screen">
-        <Navbar currentPage={page} onNavigate={handleNavigate} />
+        <Navbar currentPage={page} onNavigate={handleNavigate} onContactClick={handleContactClick} />
         {renderPage()}
         <Footer onNavigate={handleNavigate} />
+        {contactModalOpen && (
+          <ContactModal isDark={isDark} onNavigate={handleNavigate} onClose={() => setContactModalOpen(false)} />
+        )}
       </div>
     </ThemeProvider>
   );
