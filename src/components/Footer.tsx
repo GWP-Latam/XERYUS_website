@@ -119,11 +119,11 @@ export default function Footer({ onNavigate }: FooterProps) {
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={14} className="text-[#fd3838]" />
-                <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>contacto@xeryus.com</span>
+                <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>contacto@xeryusinvest.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={14} className="text-[#fd3838]" />
-                <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>+52 33 0000 0000</span>
+                <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>+52 1 33 1385 7143</span>
               </div>
             </div>
           </div>

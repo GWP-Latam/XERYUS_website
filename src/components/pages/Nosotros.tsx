@@ -3,6 +3,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { useAnimatedCounter, useInView } from '@/hooks/useAnimation';
 import { fetchTeamMembers, type TeamMember } from '@/lib/teamQueries';
 import { urlFor } from '@/lib/sanityImage';
+import { WORLD_MAP_PATH, WORLD_MAP_VIEWBOX } from '@/lib/worldMapPath';
 import { Target, Eye, Heart, Award, Globe2, Users, ArrowRight, X, Mail } from 'lucide-react';
 
 interface PageProps {
@@ -15,13 +16,36 @@ const values = [
   { icon: Eye, title: 'Visión estratégica', desc: 'No recolectamos datos. Entregamos inteligencia accionable para decisiones reales.' },
 ];
 
-// x/y son % de posición sobre el mapa mundial embebido (proyección Mercator,
-// bbox lon -180..180, lat -58..78), calculados a partir de sus coordenadas reales.
+// x/y en unidades del viewBox del mapa (mismo sistema de coordenadas que
+// WORLD_MAP_PATH), calculados a partir de la posición relativa real de cada
+// ciudad dentro del contorno de su país en el propio dataset del mapa.
 const locations = [
-  { city: 'Guadalajara', country: 'México', x: 21.3, y: 53.9 },
-  { city: 'Austin', country: 'EE.UU.', x: 22.85, y: 48.4 },
-  { city: 'París', country: 'Francia', x: 50.65, y: 36.5 },
+  { city: 'Guadalajara', country: 'México', x: 165.09, y: 471.39, delay: 0 },
+  { city: 'Austin', country: 'EE.UU.', x: 188.86, y: 442.15, delay: 1.3 },
+  { city: 'París', country: 'Francia', x: 412.12, y: 399.9, delay: 2.6 },
 ];
+
+function WorldMap({ isDark }: { isDark: boolean }) {
+  return (
+    <svg viewBox={WORLD_MAP_VIEWBOX} className="w-full h-auto">
+      <path d={WORLD_MAP_PATH} fill={isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.14)'} />
+
+      {locations.map(loc => (
+        <g key={loc.city}>
+          {/* Onda de expansión */}
+          <circle cx={loc.x} cy={loc.y} r="4" fill="none" stroke="#fd3838" strokeWidth="1.4">
+            <animate attributeName="r" from="4" to="260" dur="4.5s" begin={`${loc.delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" from="0.6" to="0" dur="4.5s" begin={`${loc.delay}s`} repeatCount="indefinite" />
+          </circle>
+          {/* Punto de origen */}
+          <circle cx={loc.x} cy={loc.y} r="4.5" fill="#fd3838">
+            <animate attributeName="r" values="4.5;6;4.5" dur="2s" begin={`${loc.delay}s`} repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
+    </svg>
+  );
+}
 
 function StatCounter({ value, suffix, label, isDark }: { value: number; suffix: string; label: string; isDark: boolean }) {
   const { ref, inView } = useInView(0.3);
@@ -201,7 +225,11 @@ export default function Nosotros({ onNavigate }: PageProps) {
           <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
             Formamos parte del ranking de mejores agencias de Investigación de Mercados en <span className={isDark ? 'text-white font-semibold' : 'text-black font-semibold'}>TODO MÉXICO</span>.
           </p>
-          <img src="/merca2_0.png" alt="Ranking de agencias de Investigación de Mercados en México" className="mt-10 w-full max-w-lg mx-auto h-auto object-contain" />
+          <img
+            src="/merca2_0.png"
+            alt="Ranking de agencias de Investigación de Mercados en México"
+            className={`mt-10 w-full max-w-[200px] sm:max-w-[240px] mx-auto h-auto object-contain ${isDark ? '' : 'invert'}`}
+          />
         </div>
       </section>
 
@@ -213,32 +241,11 @@ export default function Nosotros({ onNavigate }: PageProps) {
             <h2 className="section-title text-3xl mt-4">Tres ciudades, una visión</h2>
           </div>
 
-          <div className={`relative border overflow-hidden ${isDark ? 'border-white/10' : 'border-black/10'}`}>
-            <div className="relative aspect-[2/1]">
-              <iframe
-                title="Mapa mundial: Guadalajara, Austin y París"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-180%2C-58%2C180%2C78&layer=mapnik"
-                className={`w-full h-full border-0 pointer-events-none ${isDark ? 'grayscale invert-[92%] contrast-[90%]' : 'grayscale'}`}
-                loading="lazy"
-              />
-              {locations.map(loc => (
-                <div
-                  key={loc.city}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 group/pin"
-                  style={{ left: `${loc.x}%`, top: `${loc.y}%` }}
-                >
-                  <span className="absolute inset-0 -m-2 rounded-full bg-[#fd3838]/40 animate-ping" />
-                  <span className="relative block w-3 h-3 rounded-full bg-[#fd3838] ring-2 ring-white" />
-                  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap px-2 py-1 text-xs font-semibold opacity-0 group-hover/pin:opacity-100 transition-opacity pointer-events-none
-                    ${isDark ? 'bg-black text-white' : 'bg-white text-black shadow-md'}`}>
-                    {loc.city}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="max-w-3xl mx-auto">
+            <WorldMap isDark={isDark} />
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-3 gap-4 mt-8 max-w-3xl mx-auto">
             {locations.map(loc => (
               <div key={loc.city} className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">

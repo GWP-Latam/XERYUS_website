@@ -75,16 +75,15 @@ function TestimonialVideo({ url, client, logo }: { url: string; client: string; 
         playsInline
       />
 
-      {/* Portada: nombre + logo + degradado oscuro, visible hasta que se reproduce */}
-      <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/70" />
-        <div className="relative text-center px-8">
+      {/* Portada: logo/nombre abajo a la izquierda + degradado oscuro, visible hasta que se reproduce */}
+      <div className={`absolute inset-0 transition-opacity duration-300 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/50" />
+        <div className="absolute bottom-4 left-4 right-4">
           {logo ? (
-            <img src={logo} alt={client} className="h-8 md:h-10 mx-auto mb-4 max-w-[65%] object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={logo} alt={client} className="h-10 md:h-14 max-w-[70%] object-contain object-left drop-shadow-lg" style={{ filter: 'brightness(0) invert(1)' }} />
           ) : (
-            <p className="text-white text-lg md:text-xl font-bold tracking-wide mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>{client}</p>
+            <p className="text-white text-xl md:text-2xl font-bold tracking-wide drop-shadow-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>{client}</p>
           )}
-          <p className="text-white/50 text-[10px] tracking-[0.2em] uppercase">Testimonio en video</p>
         </div>
       </div>
 
@@ -106,16 +105,19 @@ function TestimonialVideo({ url, client, logo }: { url: string; client: string; 
 
 export default function Testimonials() {
   const { isDark } = useTheme();
-  const [active, setActive] = useState(0);
+  const [activeText, setActiveText] = useState(0);
+  const [activeVideo, setActiveVideo] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => setActive(prev => (prev + 1) % testimonials.length), 6000);
+    const timer = setInterval(() => setActiveText(prev => (prev + 1) % testimonials.length), 6000);
     return () => clearInterval(timer);
   }, []);
 
-  const next = () => setActive(prev => (prev + 1) % testimonials.length);
-  const prev = () => setActive(prev => (prev - 1 + testimonials.length) % testimonials.length);
-  const activeTestimonial = testimonials[active];
+  const nextText = () => setActiveText(prev => (prev + 1) % testimonials.length);
+  const prevText = () => setActiveText(prev => (prev - 1 + testimonials.length) % testimonials.length);
+  const nextVideo = () => setActiveVideo(prev => (prev + 1) % testimonials.length);
+  const prevVideo = () => setActiveVideo(prev => (prev - 1 + testimonials.length) % testimonials.length);
+  const activeVideoData = testimonials[activeVideo];
 
   return (
     <section className={`py-24 transition-colors duration-300 ${isDark ? 'bg-black' : 'bg-white'}`}>
@@ -127,16 +129,38 @@ export default function Testimonials() {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          {/* Left - video */}
-          <TestimonialVideo url={activeTestimonial.videoUrl} client={activeTestimonial.client} logo={activeTestimonial.logo} />
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-start">
+          {/* Left - video carousel (independiente) */}
+          <div>
+            <TestimonialVideo url={activeVideoData.videoUrl} client={activeVideoData.client} logo={activeVideoData.logo} />
+            <div className="flex items-center gap-4 mt-6">
+              <button onClick={prevVideo} aria-label="Video anterior" className={`p-2 border transition-colors duration-200
+                ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}>
+                <ChevronLeft size={18} />
+              </button>
+              <div className="flex gap-2">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveVideo(i)}
+                    aria-label={`Ver video ${i + 1}`}
+                    className={`h-1 transition-all duration-300 ${i === activeVideo ? 'w-8 bg-[#fd3838]' : 'w-2 bg-gray-300'}`}
+                  />
+                ))}
+              </div>
+              <button onClick={nextVideo} aria-label="Video siguiente" className={`p-2 border transition-colors duration-200
+                ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}>
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
 
-          {/* Right - quote carousel */}
+          {/* Right - quote carousel (independiente) */}
           <div className="relative">
             <Quote size={40} className={`mb-6 ${isDark ? 'text-white/10' : 'text-black/10'}`} />
 
             <div className="overflow-hidden">
-              <div className="transition-transform duration-500 ease-out" style={{ transform: `translateX(-${active * 100}%)` }}>
+              <div className="transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeText * 100}%)` }}>
                 <div className="flex">
                   {testimonials.map((t, i) => (
                     <div key={i} className="w-full flex-shrink-0">
@@ -165,7 +189,7 @@ export default function Testimonials() {
 
             {/* Controls */}
             <div className="flex items-center gap-4 mt-10">
-              <button onClick={prev} aria-label="Anterior" className={`p-2 border transition-colors duration-200
+              <button onClick={prevText} aria-label="Anterior" className={`p-2 border transition-colors duration-200
                 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}>
                 <ChevronLeft size={18} />
               </button>
@@ -173,13 +197,13 @@ export default function Testimonials() {
                 {testimonials.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setActive(i)}
+                    onClick={() => setActiveText(i)}
                     aria-label={`Ir al testimonio ${i + 1}`}
-                    className={`h-1 transition-all duration-300 ${i === active ? 'w-8 bg-[#fd3838]' : 'w-2 bg-gray-300'}`}
+                    className={`h-1 transition-all duration-300 ${i === activeText ? 'w-8 bg-[#fd3838]' : 'w-2 bg-gray-300'}`}
                   />
                 ))}
               </div>
-              <button onClick={next} aria-label="Siguiente" className={`p-2 border transition-colors duration-200
+              <button onClick={nextText} aria-label="Siguiente" className={`p-2 border transition-colors duration-200
                 ${isDark ? 'border-white/10 text-gray-400 hover:text-white hover:border-white/30' : 'border-black/10 text-gray-400 hover:text-black hover:border-black/30'}`}>
                 <ChevronRight size={18} />
               </button>

@@ -3,7 +3,7 @@ import { useInView } from '@/hooks/useAnimation';
 import { Award, Globe2, GitMerge, FileBarChart, Lightbulb, Layers } from 'lucide-react';
 
 const differentiators = [
-  { icon: Award, title: 'Top 15 nacional', desc: 'Posicionados entre las firmas más importantes de investigación de mercados en México.' },
+  { icon: Award, title: 'Ranking nacional', desc: 'Parte del ranking de mejores agencias de Investigación de Mercados en México.' },
   { icon: Globe2, title: 'Presencia internacional', desc: 'Operaciones en Guadalajara, Austin y París con capacidad de levantamiento global.' },
   { icon: GitMerge, title: 'Metodologías híbridas', desc: 'Combinamos cuantitativo, cualitativo y analítica avanzada para una visión 360°.' },
   { icon: FileBarChart, title: 'Reportes accionables', desc: 'No entregamos datos. Entregamos decisiones claras con respaldo metodológico.' },
